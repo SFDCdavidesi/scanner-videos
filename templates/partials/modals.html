@@ -5,7 +5,16 @@
         <h5 class="modal-title" id="videoModalTitle">Reproduciendo</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" onclick="stopVideo()"></button>
       </div>
-      <div class="modal-body text-center p-0 bg-black">
+      <div class="modal-body text-center p-0 bg-black position-relative">
+        
+        <!-- Cartel visual de error (oculto por defecto) -->
+        <div id="videoErrorAlert" class="alert alert-danger m-4 d-none text-start" role="alert">
+          <h6 class="alert-heading fw-bold"><i class="bi bi-exclamation-triangle-fill me-2"></i>No se pudo reproducir este vídeo</h6>
+          <p class="mb-1 small">El navegador o el transcodificador del NAS no han podido abrir el archivo. Puede deberse a un formato incompatible, un archivo corrupto o un corte en la comunicación.</p>
+          <hr class="my-2">
+          <p class="mb-0 small text-light">👉 Ve a la pestaña <b class="text-warning">Errores (<i class="bi bi-exclamation-triangle-fill"></i>)</b> en la pantalla principal para leer el motivo técnico exacto devuelto por FFMPEG.</p>
+        </div>
+
         <video id="webVideoPlayer" controls autoplay playsinline style="width: 100%; max-height: 80vh;"></video>
       </div>
     </div>

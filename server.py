@@ -1,13 +1,12 @@
 import os
 import sys
-import shutil
 import subprocess
 import json
-from typing import Optional
+import time
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request, HTTPException
-from fastapi.responses import HTMLResponse, FileResponse, StreamingResponse
+from fastapi.responses import HTMLResponse, FileResponse, StreamingResponse, Response
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 
@@ -30,19 +29,23 @@ def launch_geolocator_low_priority():
     if ACTIVE_GEOLOCATOR_PROCESS and ACTIVE_GEOLOCATOR_PROCESS.poll() is None:
         return
     try:
-        # 'nice -n 19' asigna la menor prioridad de CPU en el planificador del kernel Linux
         cmd = ["nice", "-n", "19", sys.executable, "geolocator.py"]
-        ACTIVE_GEOLOCATOR_PROCESS = subprocess.Popen(cmd, shell=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        ACTIVE_GEOLOCATOR_PROCESS = subprocess.Popen(
+            cmd, shell=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+        )
     except Exception as e:
         log_error("Lanzar Geolocalizador", f"No se pudo iniciar geolocator.py: {e}")
 
 def launch_scanner_process(resume: bool = False, clean_first: bool = False):
+    """Lanza scanner.py como proceso independiente en segundo plano."""
     global ACTIVE_SCANNER_PROCESS
     if ACTIVE_SCANNER_PROCESS and ACTIVE_SCANNER_PROCESS.poll() is None:
         return
     cmd = [sys.executable, "scanner.py"]
-    if resume: cmd.append("--resume")
-    if clean_first: cmd.append("--clean-deleted")
+    if resume:
+        cmd.append("--resume")
+    if clean_first:
+        cmd.append("--clean-deleted")
     try:
         ACTIVE_SCANNER_PROCESS = subprocess.Popen(cmd, shell=False)
     except Exception as e:
@@ -53,20 +56,31 @@ async def lifespan(app: FastAPI):
     if not os.path.exists(DB_FILE):
         launch_scanner_process()
     
-    # Arrancar el proceso independiente de geolocalización a prioridad mínima
     launch_geolocator_low_priority()
     
     yield
+    
     global ACTIVE_SCANNER_PROCESS, ACTIVE_GEOLOCATOR_PROCESS
     if ACTIVE_SCANNER_PROCESS and ACTIVE_SCANNER_PROCESS.poll() is None:
-        try: ACTIVE_SCANNER_PROCESS.terminate()
-        except Exception: pass
+        try:
+            ACTIVE_SCANNER_PROCESS.terminate()
+        except Exception:
+            pass
     if ACTIVE_GEOLOCATOR_PROCESS and ACTIVE_GEOLOCATOR_PROCESS.poll() is None:
-        try: ACTIVE_GEOLOCATOR_PROCESS.terminate()
-        except Exception: pass
+        try:
+            ACTIVE_GEOLOCATOR_PROCESS.terminate()
+        except Exception:
+            pass
 
 app = FastAPI(title="Explorador Web Desacoplado NAS", lifespan=lifespan)
 
+# --- ENDPOINT FAVICON SVG ---
+@app.get("/favicon.ico", include_in_schema=False)
+def favicon():
+    svg_icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🎬</text></svg>'
+    return Response(content=svg_icon, media_type="image/svg+xml")
+
+# --- ENDPOINTS API DE DATOS ---
 @app.get("/api/videos")
 def get_videos():
     return load_json(DB_FILE, [])
@@ -95,7 +109,6 @@ def clear_errors():
 @app.post("/api/scan")
 def trigger_scan(resume: bool = False, clean_first: bool = True):
     launch_scanner_process(resume=resume, clean_first=clean_first)
-    # Asegurarnos de que el geolocalizador esté corriendo
     launch_geolocator_low_priority()
     return {"message": "Escaneo iniciado."}
 
@@ -123,7 +136,7 @@ def delete_video(req: DeleteRequest):
     raise HTTPException(status_code=404, detail="Vídeo no encontrado.")
 
 
-# --- FUNCIONES DE TRANSCODIFICACIÓN AL VUELO ---
+# --- FUNCIONES DE TRANSCODIFICACIÓN AL VUELO Y STREAMING ---
 
 def needs_transcoding(filepath: str) -> bool:
     cmd = ["ffprobe", "-v", "quiet", "-print_format", "json", "-show_streams", filepath]
@@ -146,18 +159,31 @@ def needs_transcoding(filepath: str) -> bool:
         return True
 
 def ffmpeg_stream_generator(filepath: str):
+    """
+    Genera un stream MP4 transcodificado y, si falla, envía el error 
+    directamente a la pestaña 'Errores' de la interfaz web.
+    """
     cmd = [
         "ffmpeg", "-i", filepath,
         "-c:v", "libx264", "-preset", "ultrafast", "-tune", "zerolatency",
+        "-pix_fmt", "yuv420p",
         "-c:a", "aac", "-b:a", "128k",
         "-f", "mp4", "-movflags", "frag_keyframe+empty_moov",
         "pipe:1"
     ]
-    process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, bufsize=10**7)
+    process = subprocess.Popen(
+        cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, bufsize=10**7
+    )
     try:
         while True:
             chunk = process.stdout.read(65536)
             if not chunk:
+                err = process.stderr.read().decode('utf-8', errors='ignore')
+                if err and ("error" in err.lower() or "invalid" in err.lower()):
+                    nombre_archivo = os.path.basename(filepath)
+                    error_resumido = f"Fallo al transcodificar '{nombre_archivo}': {err.strip()[:250]}"
+                    print(f"[FFMPEG ERROR] {error_resumido}", flush=True)
+                    log_error("Transcodificación FFMPEG", error_resumido)
                 break
             yield chunk
     finally:
@@ -177,6 +203,7 @@ def stream_video(path: str):
         return FileResponse(path)
 
 
+# --- RUTA PRINCIPAL WEB ---
 @app.get("/", response_class=HTMLResponse)
 def get_dashboard(request: Request):
     return templates.TemplateResponse(request, "index.html", {})

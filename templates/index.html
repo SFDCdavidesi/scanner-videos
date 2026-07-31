@@ -29,7 +29,7 @@
             .mobile-stack-buttons { display: flex; flex-direction: column; gap: 8px; width: 100%; margin-top: 12px; }
             .mobile-stack-buttons .btn { width: 100%; }
             table.dataTable.dtr-inline.collapsed > tbody > tr > td.dtr-control:before {
-                background-color: #0d6efd; /* Botón '+' color azul iOS */
+                background-color: #0d6efd;
             }
         }
     </style>
@@ -128,28 +128,27 @@
                         render: function(data, type, row) {
                             const safeName = (row.name || '').replace(/'/g, "\\'");
                             const encodedPath = encodeURIComponent(row.path || '');
-                            // Nombre clickeable/táctil: en móvil muestra un icono de play delante
                             return `<a href="javascript:void(0);" onclick="playVideo('${encodedPath}', '${safeName}')" class="text-decoration-none text-primary d-inline-block py-1" style="cursor: pointer;" title="Tocar para reproducir">
                                         <i class="bi bi-play-circle-fill me-1 text-primary d-md-none"></i>${data}
                                     </a>`;
                         }
                     },
-                    { data: 'duration', className: 'min-tablet' },      // Oculto en móvil (se ve con +)
-                    { data: 'size_mb', className: 'desktop' },          // Visible solo en PC
-                    { data: 'capture_date', className: 'all' },         // VISIBLE SIEMPRE (Móvil y PC)
-                    { data: 'file_date', className: 'desktop' },        // VISIBLE EN PC (y con + en móvil)
+                    { data: 'duration', className: 'min-tablet' },
+                    { data: 'size_mb', className: 'desktop' },
+                    { data: 'capture_date', className: 'all' },
+                    { data: 'file_date', className: 'desktop' },
                     { 
                         data: 'place_name',
-                        className: 'all',                               // Visible siempre
+                        className: 'all',
                         render: function(data, type, row) {
                             if (!data) return '<span class="text-muted small">Desconocida</span>';
                             return `<span class="badge bg-info text-dark"><i class="bi bi-geo-alt-fill"></i> ${data}</span>`;
                         }
                     },
-                    { data: 'path', className: 'none' },                // Oculto siempre en la tabla principal (sólo en +)
+                    { data: 'path', className: 'none' },
                     {
                         data: null,
-                        className: 'all text-end',                      // Botones visibles siempre
+                        className: 'all text-end',
                         render: function(data, type, row) {
                             return `
                                 <div class="d-flex justify-content-end gap-1">
@@ -221,6 +220,18 @@
         function playVideo(encodedPath, name) {
             document.getElementById('videoModalTitle').innerText = name;
             const player = document.getElementById('webVideoPlayer');
+            const alertBox = document.getElementById('videoErrorAlert');
+            
+            if (alertBox) alertBox.classList.add('d-none');
+            player.style.display = 'block';
+            
+            player.onerror = function() {
+                if (alertBox) {
+                    alertBox.classList.remove('d-none');
+                    player.style.display = 'none';
+                }
+            };
+            
             player.src = `/api/stream?path=${encodedPath}`;
             const modal = new bootstrap.Modal(document.getElementById('videoModal'));
             modal.show();
@@ -228,8 +239,12 @@
 
         function stopVideo() {
             const player = document.getElementById('webVideoPlayer');
+            const alertBox = document.getElementById('videoErrorAlert');
             player.pause();
             player.src = "";
+            player.onerror = null;
+            if (alertBox) alertBox.classList.add('d-none');
+            player.style.display = 'block';
         }
 
         function checkStatus() {
