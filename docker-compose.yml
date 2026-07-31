@@ -2,18 +2,15 @@ version: '3.8'
 
 services:
   video-explorer:
-    image: python:3.11-slim
+    build: .
     container_name: nas_video_explorer
     restart: unless-stopped
     ports:
       - "8000:8000"
     volumes:
       - "/volume2/Disco 2/docker/video-explorer:/app"
-      - /volume1:/media/volume1:ro
-      - /volume2:/media/volume2:ro
-      - /volumeUSB1:/media/volumeUSB1:ro
-      - /volumeUSB2:/media/volumeUSB2:ro
-      - /volumeUSB3:/media/volumeUSB3:ro
-    working_dir: /app
-    command: >
-      bash -c "pip install --no-cache-dir -r requirements.txt && python server.py"
+      - "/volume1:/media/volume1:ro"
+      - "/volume2:/media/volume2:ro"
+      - "/volumeUSB1:/media/volumeUSB1:ro"
+      - "/volumeUSB2:/media/volumeUSB2:ro"
+      - "/volumeUSB3:/media/volumeUSB3:ro"

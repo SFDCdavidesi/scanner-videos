@@ -1,0 +1,31 @@
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-3">
+    <button class="btn btn-outline-primary btn-sm w-100 w-md-auto" type="button" data-bs-toggle="collapse" data-bs-target="#advancedFiltersPanel" aria-expanded="false" aria-controls="advancedFiltersPanel">
+        <i class="bi bi-funnel-fill"></i> Mostrar / Ocultar Filtros Avanzados
+    </button>
+    <button class="btn btn-outline-danger btn-sm w-100 w-md-auto" onclick="resetFilters()">
+        <i class="bi bi-x-circle"></i> Limpiar Todos los Filtros
+    </button>
+</div>
+
+<div class="collapse mb-4" id="advancedFiltersPanel">
+    <div class="card card-body bg-light border">
+        <div class="row g-3">
+            <div class="col-12 col-md-4">
+                <label class="form-label small fw-bold text-secondary"><i class="bi bi-geo-alt"></i> Ubicación / Ciudad:</label>
+                <input type="text" id="filterLocation" class="form-control form-control-sm" placeholder="Ej: Madrid, España...">
+            </div>
+            <div class="col-12 col-md-4">
+                <label class="form-label small fw-bold text-secondary"><i class="bi bi-calendar-date"></i> Año / Mes / Día (Parcial):</label>
+                <input type="text" id="filterDateText" class="form-control form-control-sm" placeholder="Ej: 2026 o 2026-06 o 15...">
+            </div>
+            <div class="col-6 col-md-2">
+                <label class="form-label small fw-bold text-secondary"><i class="bi bi-calendar-plus"></i> Desde:</label>
+                <input type="date" id="filterStartDate" class="form-control form-control-sm">
+            </div>
+            <div class="col-6 col-md-2">
+                <label class="form-label small fw-bold text-secondary"><i class="bi bi-calendar-minus"></i> Hasta:</label>
+                <input type="date" id="filterEndDate" class="form-control form-control-sm">
+            </div>
+        </div>
+    </div>
+</div>
