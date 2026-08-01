@@ -37,11 +37,17 @@
                 <h3 class="m-0"><i class="bi bi-collection-play-fill text-primary"></i> Explorador Web NAS</h3>
                 <small id="statusText" class="text-muted">Estado del escáner: Comprobando...</small>
             </div>
-            <!-- Controles de escaneo exclusivos para Admin -->
-            <div class="d-flex gap-2 mobile-stack-buttons" id="adminScanButtons" style="display: none !important;">
-                <button class="btn btn-outline-secondary btn-sm" onclick="triggerScan(true)"><i class="bi bi-play-circle"></i> Retomar</button>
-                <button class="btn btn-outline-danger btn-sm" id="btnCancelScan" style="display: none;" onclick="stopScan()"><i class="bi bi-stop-circle"></i> Cancelar</button>
-                <button class="btn btn-outline-primary btn-sm" onclick="triggerScan(false)"><i class="bi bi-arrow-clockwise"></i> Reiniciar Escaneo</button>
+            <div class="d-flex align-items-center gap-2 flex-wrap mt-2 mt-md-0">
+                <!-- Controles de escaneo exclusivos para Admin -->
+                <div class="d-flex gap-2 mobile-stack-buttons" id="adminScanButtons" style="display: none !important;">
+                    <button class="btn btn-outline-secondary btn-sm" onclick="triggerScan(true)"><i class="bi bi-play-circle"></i> Retomar</button>
+                    <button class="btn btn-outline-danger btn-sm" id="btnCancelScan" style="display: none;" onclick="stopScan()"><i class="bi bi-stop-circle"></i> Cancelar</button>
+                    <button class="btn btn-outline-primary btn-sm" onclick="triggerScan(false)"><i class="bi bi-arrow-clockwise"></i> Reiniciar Escaneo</button>
+                </div>
+                <!-- Botón de Cerrar Sesión visible para todos -->
+                <button class="btn btn-outline-dark btn-sm" onclick="location.href='/logout'" title="Cerrar sesión / Cambiar de usuario">
+                    <i class="bi bi-box-arrow-right"></i> Salir
+                </button>
             </div>
         </div>
 
@@ -216,7 +222,6 @@
         });
 
         $(document).ready(function() {
-            // Comprobar rol de usuario antes de inicializar la tabla y la interfaz
             fetch('/api/user_info')
             .then(r => r.json())
             .then(userInfo => {
@@ -227,7 +232,6 @@
                     document.getElementById('btnClearErrors').style.display = 'inline-block';
                 }
 
-                // Inicializar DataTable
                 table = $('#videosTable').DataTable({
                     ajax: { url: '/api/videos', dataSrc: '' },
                     deferRender: true,
@@ -498,7 +502,10 @@
                             const elapsedSeconds = Math.floor(Date.now() / 1000 - startTime);
                             if (elapsedSeconds > 0) {
                                 elapsedText = ` | ⏱️ ${Math.floor(elapsedSeconds / 60)}m ${elapsedSeconds % 60}s`;
-                                speedText = ` (${(filesScanned / elapsedSeconds).toFixed(1)} arch/s)`;
+                                // Solo calcula y muestra velocidad si ya ha encontrado ficheros/vídeos
+                                if (filesScanned > 0) {
+                                    speedText = ` (${(filesScanned / elapsedSeconds).toFixed(1)} arch/s)`;
+                                }
                             }
                         }
                         statusEl.innerHTML = `<span class="badge bg-warning text-dark"><span class="spinner-border spinner-border-sm me-1"></span> Escaneando... | 📁 Ficheros: <strong>${filesScanned}</strong>${speedText}${elapsedText} | 📍 ${data.last_folder || 'Iniciando...'}</span>`;
