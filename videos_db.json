@@ -4558,5 +4558,1455 @@
         "capture_date": "2021-05-31 19:31:03",
         "file_date": "2021-05-31 19:31:03",
         "place_name": ""
+    },
+    {
+        "id": 457,
+        "name": "$IZZ70V3.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$IZZ70V3.MOV",
+        "size_mb": 0.0,
+        "duration": 0.0,
+        "capture_date": "2020-06-14 17:53:54",
+        "file_date": "2020-06-14 17:53:54",
+        "place_name": ""
+    },
+    {
+        "id": 458,
+        "name": "$R03Y1WF.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$R03Y1WF.MOV",
+        "size_mb": 1.2,
+        "duration": 0.956667,
+        "capture_date": "2019-01-08 18:48:40",
+        "file_date": "2019-01-08 18:48:40",
+        "place_name": ""
+    },
+    {
+        "id": 459,
+        "name": "$R0NPNTC.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$R0NPNTC.MOV",
+        "size_mb": 3.9,
+        "duration": 2.0,
+        "capture_date": "2019-03-05 13:26:15",
+        "file_date": "2019-03-05 13:26:15",
+        "place_name": ""
+    },
+    {
+        "id": 460,
+        "name": "$R1F5DSV.MP4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$R1F5DSV.MP4",
+        "size_mb": 11.67,
+        "duration": 45.290667,
+        "capture_date": "2019-03-04 20:30:52",
+        "file_date": "2019-03-04 20:30:52",
+        "place_name": ""
+    },
+    {
+        "id": 461,
+        "name": "$R1RKN7J.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$R1RKN7J.MOV",
+        "size_mb": 3.89,
+        "duration": 2.033333,
+        "capture_date": "2019-03-05 13:26:10",
+        "file_date": "2019-03-05 13:26:10",
+        "place_name": ""
+    },
+    {
+        "id": 462,
+        "name": "$R2HY79L.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$R2HY79L.MOV",
+        "size_mb": 3.94,
+        "duration": 2.16,
+        "capture_date": "2019-01-03 10:52:09",
+        "file_date": "2019-01-03 10:52:09",
+        "place_name": ""
+    },
+    {
+        "id": 463,
+        "name": "$R2PBHFP.MP4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$R2PBHFP.MP4",
+        "size_mb": 1.21,
+        "duration": 40.681417,
+        "capture_date": "2019-01-10 21:12:26",
+        "file_date": "2019-01-10 21:12:26",
+        "place_name": ""
+    },
+    {
+        "id": 464,
+        "name": "$R3XJ8DP.MP4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$R3XJ8DP.MP4",
+        "size_mb": 4.36,
+        "duration": 60.000363,
+        "capture_date": "2019-02-26 09:40:26",
+        "file_date": "2019-02-26 09:40:26",
+        "place_name": ""
+    },
+    {
+        "id": 465,
+        "name": "$R415Y9L.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$R415Y9L.MOV",
+        "size_mb": 4.07,
+        "duration": 2.163333,
+        "capture_date": "2019-01-03 21:41:41",
+        "file_date": "2019-01-03 21:41:41",
+        "place_name": ""
+    },
+    {
+        "id": 466,
+        "name": "$R4C5IUY.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$R4C5IUY.MOV",
+        "size_mb": 2.31,
+        "duration": 1.521667,
+        "capture_date": "2019-01-08 18:48:42",
+        "file_date": "2019-01-08 18:48:42",
+        "place_name": ""
+    },
+    {
+        "id": 467,
+        "name": "$RE1S2H9.MP4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$RE1S2H9.MP4",
+        "size_mb": 1.65,
+        "duration": 27.466395,
+        "capture_date": "2019-01-01 10:57:14",
+        "file_date": "2019-01-01 10:57:14",
+        "place_name": ""
+    },
+    {
+        "id": 468,
+        "name": "$IE1S2H9.MP4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$IE1S2H9.MP4",
+        "size_mb": 0.0,
+        "duration": 0.0,
+        "capture_date": "2020-06-14 17:55:43",
+        "file_date": "2020-06-14 17:55:43",
+        "place_name": ""
+    },
+    {
+        "id": 469,
+        "name": "$IFZ23DN.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$IFZ23DN.MOV",
+        "size_mb": 0.0,
+        "duration": 0.0,
+        "capture_date": "2020-06-14 17:53:49",
+        "file_date": "2020-06-14 17:53:49",
+        "place_name": ""
+    },
+    {
+        "id": 470,
+        "name": "$IG4CHHS.MP4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$IG4CHHS.MP4",
+        "size_mb": 0.0,
+        "duration": 0.0,
+        "capture_date": "2020-06-14 17:59:04",
+        "file_date": "2020-06-14 17:59:04",
+        "place_name": ""
+    },
+    {
+        "id": 471,
+        "name": "$RPKCS9S.MP4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$RPKCS9S.MP4",
+        "size_mb": 9.05,
+        "duration": 37.484125,
+        "capture_date": "2019-03-03 08:55:47",
+        "file_date": "2019-03-03 08:55:47",
+        "place_name": ""
+    },
+    {
+        "id": 472,
+        "name": "$RQ1ZW90.MP4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$RQ1ZW90.MP4",
+        "size_mb": 3.77,
+        "duration": 14.912,
+        "capture_date": "2019-02-25 12:40:19",
+        "file_date": "2019-02-25 12:40:19",
+        "place_name": ""
+    },
+    {
+        "id": 473,
+        "name": "$RQLB7W0.MP4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$RQLB7W0.MP4",
+        "size_mb": 5.99,
+        "duration": 104.3042,
+        "capture_date": "2019-02-27 14:52:17",
+        "file_date": "2019-02-27 14:52:17",
+        "place_name": ""
+    },
+    {
+        "id": 474,
+        "name": "$IOEBKR9.MP4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$IOEBKR9.MP4",
+        "size_mb": 0.0,
+        "duration": 0.0,
+        "capture_date": "2020-06-14 18:00:06",
+        "file_date": "2020-06-14 18:00:06",
+        "place_name": ""
+    },
+    {
+        "id": 475,
+        "name": "$IPKCS9S.MP4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$IPKCS9S.MP4",
+        "size_mb": 0.0,
+        "duration": 0.0,
+        "capture_date": "2020-06-14 18:03:40",
+        "file_date": "2020-06-14 18:03:40",
+        "place_name": ""
+    },
+    {
+        "id": 476,
+        "name": "$IQ1ZW90.MP4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$IQ1ZW90.MP4",
+        "size_mb": 0.0,
+        "duration": 0.0,
+        "capture_date": "2020-06-14 17:59:31",
+        "file_date": "2020-06-14 17:59:31",
+        "place_name": ""
+    },
+    {
+        "id": 477,
+        "name": "$IQLB7W0.MP4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$IQLB7W0.MP4",
+        "size_mb": 0.0,
+        "duration": 0.0,
+        "capture_date": "2020-06-14 17:57:10",
+        "file_date": "2020-06-14 17:57:10",
+        "place_name": ""
+    },
+    {
+        "id": 478,
+        "name": "$R63P5G9.MP4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$R63P5G9.MP4",
+        "size_mb": 7.12,
+        "duration": 34.922812,
+        "capture_date": "2019-01-12 11:13:03",
+        "file_date": "2019-01-12 11:13:03",
+        "place_name": ""
+    },
+    {
+        "id": 479,
+        "name": "$R68AQZC.MP4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$R68AQZC.MP4",
+        "size_mb": 5.23,
+        "duration": 54.613333,
+        "capture_date": "2019-01-09 14:05:13",
+        "file_date": "2019-01-09 14:05:13",
+        "place_name": ""
+    },
+    {
+        "id": 480,
+        "name": "$R8KY23W.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$R8KY23W.MOV",
+        "size_mb": 5.54,
+        "duration": 2.96,
+        "capture_date": "2019-04-12 11:22:01",
+        "file_date": "2019-04-12 11:22:01",
+        "place_name": ""
+    },
+    {
+        "id": 481,
+        "name": "$I63P5G9.MP4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$I63P5G9.MP4",
+        "size_mb": 0.0,
+        "duration": 0.0,
+        "capture_date": "2020-06-14 17:56:08",
+        "file_date": "2020-06-14 17:56:08",
+        "place_name": ""
+    },
+    {
+        "id": 482,
+        "name": "$I68AQZC.MP4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$I68AQZC.MP4",
+        "size_mb": 0.0,
+        "duration": 0.0,
+        "capture_date": "2020-06-14 17:51:33",
+        "file_date": "2020-06-14 17:51:33",
+        "place_name": ""
+    },
+    {
+        "id": 483,
+        "name": "$RINFIY8.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$RINFIY8.MOV",
+        "size_mb": 4.34,
+        "duration": 2.463333,
+        "capture_date": "2019-01-03 21:41:46",
+        "file_date": "2019-01-03 21:41:46",
+        "place_name": ""
+    },
+    {
+        "id": 484,
+        "name": "$RK1TXS9.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$RK1TXS9.MOV",
+        "size_mb": 2.99,
+        "duration": 1.601678,
+        "capture_date": "2019-01-08 18:49:26",
+        "file_date": "2019-01-08 18:49:26",
+        "place_name": ""
+    },
+    {
+        "id": 485,
+        "name": "$RL9T1VY.MP4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$RL9T1VY.MP4",
+        "size_mb": 12.68,
+        "duration": 54.306333,
+        "capture_date": "2019-03-01 20:41:05",
+        "file_date": "2019-03-01 20:41:05",
+        "place_name": ""
+    },
+    {
+        "id": 486,
+        "name": "$IVY9DA7.MP4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$IVY9DA7.MP4",
+        "size_mb": 0.0,
+        "duration": 0.0,
+        "capture_date": "2020-06-14 17:55:38",
+        "file_date": "2020-06-14 17:55:38",
+        "place_name": ""
+    },
+    {
+        "id": 487,
+        "name": "$IXRH14C.MP4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$IXRH14C.MP4",
+        "size_mb": 0.0,
+        "duration": 0.0,
+        "capture_date": "2020-09-28 16:54:49",
+        "file_date": "2020-09-28 16:54:49",
+        "place_name": ""
+    },
+    {
+        "id": 488,
+        "name": "$IZ61E5F.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$IZ61E5F.MOV",
+        "size_mb": 0.0,
+        "duration": 0.0,
+        "capture_date": "2020-06-14 17:54:37",
+        "file_date": "2020-06-14 17:54:37",
+        "place_name": ""
+    },
+    {
+        "id": 489,
+        "name": "$RVY9DA7.MP4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$RVY9DA7.MP4",
+        "size_mb": 4.67,
+        "duration": 22.291156,
+        "capture_date": "2019-01-01 11:45:33",
+        "file_date": "2019-01-01 11:45:33",
+        "place_name": ""
+    },
+    {
+        "id": 490,
+        "name": "$RXRH14C.MP4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$RXRH14C.MP4",
+        "size_mb": 3.62,
+        "duration": 30.046621,
+        "capture_date": "2018-12-31 23:07:17",
+        "file_date": "2018-12-31 23:07:17",
+        "place_name": ""
+    },
+    {
+        "id": 491,
+        "name": "$RZ61E5F.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$RZ61E5F.MOV",
+        "size_mb": 2.52,
+        "duration": 1.466667,
+        "capture_date": "2019-01-08 18:48:45",
+        "file_date": "2019-01-08 18:48:45",
+        "place_name": ""
+    },
+    {
+        "id": 492,
+        "name": "$RZZ70V3.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$RZZ70V3.MOV",
+        "size_mb": 2.27,
+        "duration": 1.521667,
+        "capture_date": "2019-01-08 18:48:41",
+        "file_date": "2019-01-08 18:48:41",
+        "place_name": ""
+    },
+    {
+        "id": 493,
+        "name": "$IINFIY8.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$IINFIY8.MOV",
+        "size_mb": 0.0,
+        "duration": 0.0,
+        "capture_date": "2020-06-14 17:52:37",
+        "file_date": "2020-06-14 17:52:37",
+        "place_name": ""
+    },
+    {
+        "id": 494,
+        "name": "$IK1TXS9.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$IK1TXS9.MOV",
+        "size_mb": 0.0,
+        "duration": 0.0,
+        "capture_date": "2020-06-14 17:54:37",
+        "file_date": "2020-06-14 17:54:37",
+        "place_name": ""
+    },
+    {
+        "id": 495,
+        "name": "$IL9T1VY.MP4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$IL9T1VY.MP4",
+        "size_mb": 0.0,
+        "duration": 0.0,
+        "capture_date": "2020-06-14 18:03:46",
+        "file_date": "2020-06-14 18:03:46",
+        "place_name": ""
+    },
+    {
+        "id": 496,
+        "name": "$ILJCJ0F.MP4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$ILJCJ0F.MP4",
+        "size_mb": 0.0,
+        "duration": 0.0,
+        "capture_date": "2020-06-14 17:57:21",
+        "file_date": "2020-06-14 17:57:21",
+        "place_name": ""
+    },
+    {
+        "id": 497,
+        "name": "$INOAINJ.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$INOAINJ.MOV",
+        "size_mb": 0.0,
+        "duration": 0.0,
+        "capture_date": "2020-06-14 18:17:13",
+        "file_date": "2020-06-14 18:17:13",
+        "place_name": ""
+    },
+    {
+        "id": 498,
+        "name": "$I8KY23W.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$I8KY23W.MOV",
+        "size_mb": 0.0,
+        "duration": 0.0,
+        "capture_date": "2020-06-14 18:17:24",
+        "file_date": "2020-06-14 18:17:24",
+        "place_name": ""
+    },
+    {
+        "id": 499,
+        "name": "$I9KTW49.MP4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$I9KTW49.MP4",
+        "size_mb": 0.0,
+        "duration": 0.0,
+        "capture_date": "2020-06-14 17:58:26",
+        "file_date": "2020-06-14 17:58:26",
+        "place_name": ""
+    },
+    {
+        "id": 500,
+        "name": "$IAW8QGZ.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$IAW8QGZ.MOV",
+        "size_mb": 0.0,
+        "duration": 0.0,
+        "capture_date": "2020-06-14 17:54:37",
+        "file_date": "2020-06-14 17:54:37",
+        "place_name": ""
+    },
+    {
+        "id": 501,
+        "name": "$R9KTW49.MP4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$R9KTW49.MP4",
+        "size_mb": 4.41,
+        "duration": 21.548118,
+        "capture_date": "2019-02-18 06:47:24",
+        "file_date": "2019-02-18 06:47:24",
+        "place_name": ""
+    },
+    {
+        "id": 502,
+        "name": "$RAW8QGZ.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$RAW8QGZ.MOV",
+        "size_mb": 2.8,
+        "duration": 1.595011,
+        "capture_date": "2019-01-08 18:48:44",
+        "file_date": "2019-01-08 18:48:44",
+        "place_name": ""
+    },
+    {
+        "id": 503,
+        "name": "$RSNDXUV.MP4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$RSNDXUV.MP4",
+        "size_mb": 2.03,
+        "duration": 9.98458,
+        "capture_date": "2019-08-29 13:42:20",
+        "file_date": "2019-08-29 13:42:20",
+        "place_name": ""
+    },
+    {
+        "id": 504,
+        "name": "$RU4J0KP.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$RU4J0KP.MOV",
+        "size_mb": 4.39,
+        "duration": 2.436667,
+        "capture_date": "2019-01-08 18:49:27",
+        "file_date": "2019-01-08 18:49:27",
+        "place_name": ""
+    },
+    {
+        "id": 505,
+        "name": "$ISNDXUV.MP4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$ISNDXUV.MP4",
+        "size_mb": 0.0,
+        "duration": 0.0,
+        "capture_date": "2020-06-14 18:12:04",
+        "file_date": "2020-06-14 18:12:04",
+        "place_name": ""
+    },
+    {
+        "id": 506,
+        "name": "$RLJCJ0F.MP4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$RLJCJ0F.MP4",
+        "size_mb": 12.54,
+        "duration": 53.674667,
+        "capture_date": "2019-02-22 14:43:09",
+        "file_date": "2019-02-22 14:43:09",
+        "place_name": ""
+    },
+    {
+        "id": 507,
+        "name": "$RNOAINJ.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$RNOAINJ.MOV",
+        "size_mb": 4.01,
+        "duration": 2.266667,
+        "capture_date": "2019-04-11 17:58:23",
+        "file_date": "2019-04-11 17:58:23",
+        "place_name": ""
+    },
+    {
+        "id": 508,
+        "name": "$ROEBKR9.MP4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$ROEBKR9.MP4",
+        "size_mb": 2.36,
+        "duration": 16.933334,
+        "capture_date": "2019-02-24 09:17:54",
+        "file_date": "2019-02-24 09:17:54",
+        "place_name": ""
+    },
+    {
+        "id": 509,
+        "name": "$RFZ23DN.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$RFZ23DN.MOV",
+        "size_mb": 1.72,
+        "duration": 1.28,
+        "capture_date": "2019-01-08 18:48:40",
+        "file_date": "2019-01-08 18:48:40",
+        "place_name": ""
+    },
+    {
+        "id": 510,
+        "name": "$RG4CHHS.MP4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$RG4CHHS.MP4",
+        "size_mb": 2.25,
+        "duration": 10.750839,
+        "capture_date": "2019-02-06 19:37:26",
+        "file_date": "2019-02-06 19:37:26",
+        "place_name": ""
+    },
+    {
+        "id": 511,
+        "name": "$IU4J0KP.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$IU4J0KP.MOV",
+        "size_mb": 0.0,
+        "duration": 0.0,
+        "capture_date": "2020-06-14 17:54:37",
+        "file_date": "2020-06-14 17:54:37",
+        "place_name": ""
+    },
+    {
+        "id": 512,
+        "name": "$I03Y1WF.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$I03Y1WF.MOV",
+        "size_mb": 0.0,
+        "duration": 0.0,
+        "capture_date": "2020-06-14 17:53:45",
+        "file_date": "2020-06-14 17:53:45",
+        "place_name": ""
+    },
+    {
+        "id": 513,
+        "name": "$I0NPNTC.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$I0NPNTC.MOV",
+        "size_mb": 0.0,
+        "duration": 0.0,
+        "capture_date": "2020-06-14 18:03:25",
+        "file_date": "2020-06-14 18:03:25",
+        "place_name": ""
+    },
+    {
+        "id": 514,
+        "name": "$I1F5DSV.MP4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$I1F5DSV.MP4",
+        "size_mb": 0.0,
+        "duration": 0.0,
+        "capture_date": "2020-06-14 18:03:44",
+        "file_date": "2020-06-14 18:03:44",
+        "place_name": ""
+    },
+    {
+        "id": 515,
+        "name": "$I1RKN7J.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$I1RKN7J.MOV",
+        "size_mb": 0.0,
+        "duration": 0.0,
+        "capture_date": "2020-06-14 18:03:28",
+        "file_date": "2020-06-14 18:03:28",
+        "place_name": ""
+    },
+    {
+        "id": 516,
+        "name": "$I2HY79L.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$I2HY79L.MOV",
+        "size_mb": 0.0,
+        "duration": 0.0,
+        "capture_date": "2020-06-14 17:52:07",
+        "file_date": "2020-06-14 17:52:07",
+        "place_name": ""
+    },
+    {
+        "id": 517,
+        "name": "$I2PBHFP.MP4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$I2PBHFP.MP4",
+        "size_mb": 0.0,
+        "duration": 0.0,
+        "capture_date": "2020-06-14 17:51:25",
+        "file_date": "2020-06-14 17:51:25",
+        "place_name": ""
+    },
+    {
+        "id": 518,
+        "name": "$I3XJ8DP.MP4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$I3XJ8DP.MP4",
+        "size_mb": 0.0,
+        "duration": 0.0,
+        "capture_date": "2020-06-14 17:58:29",
+        "file_date": "2020-06-14 17:58:29",
+        "place_name": ""
+    },
+    {
+        "id": 519,
+        "name": "$I415Y9L.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$I415Y9L.MOV",
+        "size_mb": 0.0,
+        "duration": 0.0,
+        "capture_date": "2020-06-14 17:52:32",
+        "file_date": "2020-06-14 17:52:32",
+        "place_name": ""
+    },
+    {
+        "id": 520,
+        "name": "$I4C5IUY.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/$RECYCLE.BIN/S-1-5-21-3004658170-291937231-204239976-1001/$I4C5IUY.MOV",
+        "size_mb": 0.0,
+        "duration": 0.0,
+        "capture_date": "2020-06-14 17:54:35",
+        "file_date": "2020-06-14 17:54:35",
+        "place_name": ""
+    },
+    {
+        "id": 521,
+        "name": "DSC_0357.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'13-8 EEUU/'13 Gran Cañón/DSC_0357.MOV",
+        "size_mb": 25.66,
+        "duration": 23.77375,
+        "capture_date": "2013-08-19 19:49:42",
+        "file_date": "2013-08-19 19:49:42",
+        "place_name": ""
+    },
+    {
+        "id": 522,
+        "name": "IMG_2762.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'13-8 EEUU/'13 Gran Cañón/IMG_2762.MOV",
+        "size_mb": 189.06,
+        "duration": 148.396667,
+        "capture_date": "2013-08-18 21:16:06",
+        "file_date": "2013-08-18 21:16:06",
+        "place_name": ""
+    },
+    {
+        "id": 523,
+        "name": "IMG_2763.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'13-8 EEUU/'13 Gran Cañón/IMG_2763.MOV",
+        "size_mb": 19.2,
+        "duration": 15.028333,
+        "capture_date": "2013-08-18 21:17:00",
+        "file_date": "2013-08-18 21:17:00",
+        "place_name": ""
+    },
+    {
+        "id": 524,
+        "name": "Vídeo 16-08-13 18 00 20.mov",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'13-8 EEUU/'13 Gran Cañón/Vídeo 16-08-13 18 00 20.mov",
+        "size_mb": 60.96,
+        "duration": 48.626667,
+        "capture_date": "2013-08-23 15:40:30",
+        "file_date": "2013-08-23 15:40:30",
+        "place_name": ""
+    },
+    {
+        "id": 525,
+        "name": "Vídeo 16-08-13 19 06 10.mov",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'13-8 EEUU/'13 Gran Cañón/Vídeo 16-08-13 19 06 10.mov",
+        "size_mb": 26.42,
+        "duration": 20.543333,
+        "capture_date": "2013-08-23 15:59:31",
+        "file_date": "2013-08-23 15:59:31",
+        "place_name": ""
+    },
+    {
+        "id": 526,
+        "name": "Vídeo 16-08-13 19 09 13.mov",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'13-8 EEUU/'13 Gran Cañón/Vídeo 16-08-13 19 09 13.mov",
+        "size_mb": 5.69,
+        "duration": 4.493333,
+        "capture_date": "2013-08-23 16:01:13",
+        "file_date": "2013-08-23 16:01:13",
+        "place_name": ""
+    },
+    {
+        "id": 527,
+        "name": "Vídeo 17-08-13 14 34 43.mov",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'13-8 EEUU/'13 Gran Cañón/Vídeo 17-08-13 14 34 43.mov",
+        "size_mb": 25.06,
+        "duration": 19.501678,
+        "capture_date": "2013-08-23 16:32:05",
+        "file_date": "2013-08-23 16:32:05",
+        "place_name": ""
+    },
+    {
+        "id": 528,
+        "name": "Vídeo 18-08-13 13 10 15.mov",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'13-8 EEUU/'13 Gran Cañón/Vídeo 18-08-13 13 10 15.mov",
+        "size_mb": 17.16,
+        "duration": 13.18,
+        "capture_date": "2013-08-23 16:52:17",
+        "file_date": "2013-08-23 16:52:17",
+        "place_name": ""
+    },
+    {
+        "id": 529,
+        "name": "Vídeo 18-08-13 14 09 22.mov",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'13-8 EEUU/'13 Gran Cañón/Vídeo 18-08-13 14 09 22.mov",
+        "size_mb": 57.46,
+        "duration": 45.558333,
+        "capture_date": "2013-08-23 17:37:51",
+        "file_date": "2013-08-23 17:37:51",
+        "place_name": ""
+    },
+    {
+        "id": 530,
+        "name": "Vídeo 18-08-13 14 26 19.mov",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'13-8 EEUU/'13 Gran Cañón/Vídeo 18-08-13 14 26 19.mov",
+        "size_mb": 63.91,
+        "duration": 49.665,
+        "capture_date": "2013-08-24 05:32:16",
+        "file_date": "2013-08-24 05:32:16",
+        "place_name": ""
+    },
+    {
+        "id": 531,
+        "name": "Vídeo 18-08-13 23 09 25.mp4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'13-8 EEUU/'13 Gran Cañón/Vídeo 18-08-13 23 09 25.mp4",
+        "size_mb": 0.53,
+        "duration": 21.916667,
+        "capture_date": "2013-08-24 05:32:33",
+        "file_date": "2013-08-24 05:32:33",
+        "place_name": ""
+    },
+    {
+        "id": 532,
+        "name": "DSC_0099.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'13-8 EEUU/'13 Las Vegas/DSC_0099.MOV",
+        "size_mb": 17.15,
+        "duration": 16.641625,
+        "capture_date": "2013-08-17 08:42:04",
+        "file_date": "2013-08-17 08:42:04",
+        "place_name": ""
+    },
+    {
+        "id": 533,
+        "name": "IMG_2871.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'13-8 EEUU/'13 San Francisco/IMG_2871.MOV",
+        "size_mb": 37.65,
+        "duration": 29.241667,
+        "capture_date": "2013-08-23 21:53:44",
+        "file_date": "2013-08-23 21:53:44",
+        "place_name": ""
+    },
+    {
+        "id": 534,
+        "name": "IMG_2791.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'13-8 EEUU/'13 San Francisco/IMG_2791.MOV",
+        "size_mb": 3.46,
+        "duration": 2.623333,
+        "capture_date": "2013-08-22 02:46:46",
+        "file_date": "2013-08-22 02:46:46",
+        "place_name": ""
+    },
+    {
+        "id": 535,
+        "name": "IMG_2792.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'13-8 EEUU/'13 San Francisco/IMG_2792.MOV",
+        "size_mb": 53.21,
+        "duration": 41.733333,
+        "capture_date": "2013-08-22 02:47:33",
+        "file_date": "2013-08-22 02:47:33",
+        "place_name": ""
+    },
+    {
+        "id": 536,
+        "name": "IMG_2862.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'13-8 EEUU/'13 San Francisco/IMG_2862.MOV",
+        "size_mb": 17.79,
+        "duration": 13.765011,
+        "capture_date": "2013-08-23 21:44:45",
+        "file_date": "2013-08-23 21:44:45",
+        "place_name": ""
+    },
+    {
+        "id": 537,
+        "name": "DSC_0005.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'13-9 Londres/DSC_0005.MOV",
+        "size_mb": 26.74,
+        "duration": 23.648625,
+        "capture_date": "2013-09-27 10:04:36",
+        "file_date": "2013-09-27 10:04:36",
+        "place_name": ""
+    },
+    {
+        "id": 538,
+        "name": "DSC_1184.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'13-9 Londres/DSC_1184.MOV",
+        "size_mb": 23.78,
+        "duration": 21.146125,
+        "capture_date": "2013-09-27 09:41:00",
+        "file_date": "2013-09-27 09:41:00",
+        "place_name": ""
+    },
+    {
+        "id": 539,
+        "name": "IMG_2594.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'13. Varios/IMG_2594.MOV",
+        "size_mb": 1.36,
+        "duration": 14.32,
+        "capture_date": "2013-08-11 10:02:59",
+        "file_date": "2013-08-11 10:02:59",
+        "place_name": ""
+    },
+    {
+        "id": 540,
+        "name": "IMG_0331.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Adriana/IMG_0331.MOV",
+        "size_mb": 47.59,
+        "duration": 15.42,
+        "capture_date": "2015-09-07 22:20:06",
+        "file_date": "2015-09-07 22:20:06",
+        "place_name": ""
+    },
+    {
+        "id": 541,
+        "name": "IMG_0320.mov",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Adriana/IMG_0320.mov",
+        "size_mb": 4.2,
+        "duration": 9.835,
+        "capture_date": "2015-09-07 22:17:40",
+        "file_date": "2015-09-07 22:17:40",
+        "place_name": ""
+    },
+    {
+        "id": 542,
+        "name": "IMG_0360.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Adriana/IMG_0360.MOV",
+        "size_mb": 76.93,
+        "duration": 0.0,
+        "capture_date": "2015-09-07 22:24:16",
+        "file_date": "2015-09-07 22:24:16",
+        "place_name": ""
+    },
+    {
+        "id": 543,
+        "name": "IMG_0388.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Adriana/IMG_0388.MOV",
+        "size_mb": 19.37,
+        "duration": 6.318333,
+        "capture_date": "2015-09-07 22:19:47",
+        "file_date": "2015-09-07 22:19:47",
+        "place_name": ""
+    },
+    {
+        "id": 544,
+        "name": "IMG_0389.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Adriana/IMG_0389.MOV",
+        "size_mb": 45.02,
+        "duration": 14.603333,
+        "capture_date": "2015-09-07 22:21:13",
+        "file_date": "2015-09-07 22:21:13",
+        "place_name": ""
+    },
+    {
+        "id": 545,
+        "name": "IMG_0784.mov",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Adriana/IMG_0784.mov",
+        "size_mb": 8.2,
+        "duration": 20.143333,
+        "capture_date": "2015-09-07 22:21:26",
+        "file_date": "2015-09-07 22:21:26",
+        "place_name": ""
+    },
+    {
+        "id": 546,
+        "name": "IMG_0823.mov",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Adriana/IMG_0823.mov",
+        "size_mb": 11.43,
+        "duration": 29.703333,
+        "capture_date": "2015-09-07 22:22:54",
+        "file_date": "2015-09-07 22:22:54",
+        "place_name": ""
+    },
+    {
+        "id": 547,
+        "name": "IMG_0908.mov",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Adriana/IMG_0908.mov",
+        "size_mb": 6.98,
+        "duration": 0.0,
+        "capture_date": "2015-09-07 22:27:06",
+        "file_date": "2015-09-07 22:27:06",
+        "place_name": ""
+    },
+    {
+        "id": 548,
+        "name": "IMG_0936.mov",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Adriana/IMG_0936.mov",
+        "size_mb": 4.5,
+        "duration": 11.005011,
+        "capture_date": "2015-09-07 22:26:12",
+        "file_date": "2015-09-07 22:26:12",
+        "place_name": ""
+    },
+    {
+        "id": 549,
+        "name": "IMG_1073.mov",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Adriana/IMG_1073.mov",
+        "size_mb": 20.32,
+        "duration": 54.881667,
+        "capture_date": "2015-09-07 22:34:19",
+        "file_date": "2015-09-07 22:34:19",
+        "place_name": ""
+    },
+    {
+        "id": 550,
+        "name": "IMG_1074.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Adriana/IMG_1074.MOV",
+        "size_mb": 99.97,
+        "duration": 32.406667,
+        "capture_date": "2015-09-07 22:39:52",
+        "file_date": "2015-09-07 22:39:52",
+        "place_name": ""
+    },
+    {
+        "id": 551,
+        "name": "IMG_1159.mov",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Adriana/IMG_1159.mov",
+        "size_mb": 1.23,
+        "duration": 13.333333,
+        "capture_date": "2015-09-07 22:34:48",
+        "file_date": "2015-09-07 22:34:48",
+        "place_name": ""
+    },
+    {
+        "id": 552,
+        "name": "IMG_1160.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Adriana/IMG_1160.MOV",
+        "size_mb": 16.71,
+        "duration": 13.588345,
+        "capture_date": "2015-09-07 22:35:52",
+        "file_date": "2015-09-07 22:35:52",
+        "place_name": ""
+    },
+    {
+        "id": 553,
+        "name": "IMG_1161.mov",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Adriana/IMG_1161.mov",
+        "size_mb": 60.26,
+        "duration": 19.486667,
+        "capture_date": "2015-09-07 22:38:13",
+        "file_date": "2015-09-07 22:38:13",
+        "place_name": ""
+    },
+    {
+        "id": 554,
+        "name": "IMG_1204.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Adriana/IMG_1204.MOV",
+        "size_mb": 5.86,
+        "duration": 1.833333,
+        "capture_date": "2015-09-07 22:36:52",
+        "file_date": "2015-09-07 22:36:52",
+        "place_name": ""
+    },
+    {
+        "id": 555,
+        "name": "IMG_1205.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Adriana/IMG_1205.MOV",
+        "size_mb": 10.63,
+        "duration": 3.3,
+        "capture_date": "2015-09-07 22:37:20",
+        "file_date": "2015-09-07 22:37:20",
+        "place_name": ""
+    },
+    {
+        "id": 556,
+        "name": "IMG_1297.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Adriana/IMG_1297.MOV",
+        "size_mb": 18.44,
+        "duration": 45.426667,
+        "capture_date": "2015-09-07 22:39:59",
+        "file_date": "2015-09-07 22:39:59",
+        "place_name": ""
+    },
+    {
+        "id": 557,
+        "name": "IMG_1310 (1).mov",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Adriana/IMG_1310 (1).mov",
+        "size_mb": 5.21,
+        "duration": 58.491667,
+        "capture_date": "2015-09-07 22:39:17",
+        "file_date": "2015-09-07 22:39:17",
+        "place_name": ""
+    },
+    {
+        "id": 558,
+        "name": "IMG_1337.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Adriana/IMG_1337.MOV",
+        "size_mb": 33.42,
+        "duration": 10.685011,
+        "capture_date": "2014-12-27 14:41:43",
+        "file_date": "2014-12-27 14:41:43",
+        "place_name": ""
+    },
+    {
+        "id": 559,
+        "name": "IMG_1390.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Adriana/IMG_1390.MOV",
+        "size_mb": 40.62,
+        "duration": 13.753333,
+        "capture_date": "2014-12-30 15:15:40",
+        "file_date": "2014-12-30 15:15:40",
+        "place_name": ""
+    },
+    {
+        "id": 560,
+        "name": "IMG_1391.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Adriana/IMG_1391.MOV",
+        "size_mb": 5.4,
+        "duration": 1.733333,
+        "capture_date": "2014-12-30 15:16:00",
+        "file_date": "2014-12-30 15:16:00",
+        "place_name": ""
+    },
+    {
+        "id": 561,
+        "name": "IMG_1392.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Adriana/IMG_1392.MOV",
+        "size_mb": 34.66,
+        "duration": 11.068345,
+        "capture_date": "2014-12-30 15:16:05",
+        "file_date": "2014-12-30 15:16:05",
+        "place_name": ""
+    },
+    {
+        "id": 562,
+        "name": "IMG_1470.mp4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Adriana/IMG_1470.mp4",
+        "size_mb": 4.27,
+        "duration": 47.785,
+        "capture_date": "2015-01-02 09:24:23",
+        "file_date": "2015-01-02 09:24:23",
+        "place_name": ""
+    },
+    {
+        "id": 563,
+        "name": "IMG_1477.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Adriana/IMG_1477.MOV",
+        "size_mb": 59.73,
+        "duration": 18.753333,
+        "capture_date": "2015-01-02 12:58:58",
+        "file_date": "2015-01-02 12:58:58",
+        "place_name": ""
+    },
+    {
+        "id": 564,
+        "name": "IMG_1524.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Adriana/IMG_1524.MOV",
+        "size_mb": 81.29,
+        "duration": 27.906667,
+        "capture_date": "2015-09-07 22:44:29",
+        "file_date": "2015-09-07 22:44:29",
+        "place_name": ""
+    },
+    {
+        "id": 565,
+        "name": "IMG_1723.mov",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Adriana/IMG_1723.mov",
+        "size_mb": 15.9,
+        "duration": 39.116667,
+        "capture_date": "2015-09-07 22:44:57",
+        "file_date": "2015-09-07 22:44:57",
+        "place_name": ""
+    },
+    {
+        "id": 566,
+        "name": "IMG_1777.mov",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Adriana/IMG_1777.mov",
+        "size_mb": 13.12,
+        "duration": 37.703333,
+        "capture_date": "2015-09-07 22:44:50",
+        "file_date": "2015-09-07 22:44:50",
+        "place_name": ""
+    },
+    {
+        "id": 567,
+        "name": "IMG_2440.mov",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Adriana/IMG_2440.mov",
+        "size_mb": 7.99,
+        "duration": 19.68,
+        "capture_date": "2015-09-07 22:47:50",
+        "file_date": "2015-09-07 22:47:50",
+        "place_name": ""
+    },
+    {
+        "id": 568,
+        "name": "IMG_5797.mp4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Adriana/IMG_5797.mp4",
+        "size_mb": 2.07,
+        "duration": 23.150295,
+        "capture_date": "2014-11-17 01:07:37",
+        "file_date": "2014-11-17 01:07:37",
+        "place_name": ""
+    },
+    {
+        "id": 569,
+        "name": "IMG_5927.mp4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Adriana/IMG_5927.mp4",
+        "size_mb": 2.51,
+        "duration": 27.376327,
+        "capture_date": "2014-11-20 13:05:44",
+        "file_date": "2014-11-20 13:05:44",
+        "place_name": ""
+    },
+    {
+        "id": 570,
+        "name": "IMG_5935.mp4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Adriana/IMG_5935.mp4",
+        "size_mb": 2.67,
+        "duration": 28.733333,
+        "capture_date": "2014-11-21 20:30:07",
+        "file_date": "2014-11-21 20:30:07",
+        "place_name": ""
+    },
+    {
+        "id": 571,
+        "name": "IMG_0810.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Adriana/IMG_0810.MOV",
+        "size_mb": 22.31,
+        "duration": 0.0,
+        "capture_date": "2015-09-07 22:24:44",
+        "file_date": "2015-09-07 22:24:44",
+        "place_name": ""
+    },
+    {
+        "id": 572,
+        "name": "IMG_1100.mov",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Adriana/IMG_1100.mov",
+        "size_mb": 11.9,
+        "duration": 131.185,
+        "capture_date": "2015-09-07 22:33:02",
+        "file_date": "2015-09-07 22:33:02",
+        "place_name": ""
+    },
+    {
+        "id": 573,
+        "name": "IMG_5931.mp4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Adriana/IMG_5931.mp4",
+        "size_mb": 7.95,
+        "duration": 28.010667,
+        "capture_date": "2014-11-20 20:21:45",
+        "file_date": "2014-11-20 20:21:45",
+        "place_name": ""
+    },
+    {
+        "id": 574,
+        "name": "IMG_6138.mp4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Adriana/IMG_6138.mp4",
+        "size_mb": 1.37,
+        "duration": 14.6,
+        "capture_date": "2014-12-02 21:10:20",
+        "file_date": "2014-12-02 21:10:20",
+        "place_name": ""
+    },
+    {
+        "id": 575,
+        "name": "IMG_6230.mov",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Adriana/IMG_6230.mov",
+        "size_mb": 1.03,
+        "duration": 11.005011,
+        "capture_date": "2014-12-10 15:30:33",
+        "file_date": "2014-12-10 15:30:33",
+        "place_name": ""
+    },
+    {
+        "id": 576,
+        "name": "IMG_6306.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Adriana/IMG_6306.MOV",
+        "size_mb": 36.04,
+        "duration": 17.913333,
+        "capture_date": "2014-12-13 21:38:58",
+        "file_date": "2014-12-13 21:38:58",
+        "place_name": ""
+    },
+    {
+        "id": 577,
+        "name": "IMG_6338.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Adriana/IMG_6338.MOV",
+        "size_mb": 40.56,
+        "duration": 19.955011,
+        "capture_date": "2014-12-15 21:37:38",
+        "file_date": "2014-12-15 21:37:38",
+        "place_name": ""
+    },
+    {
+        "id": 578,
+        "name": "IMG_6351.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Adriana/IMG_6351.MOV",
+        "size_mb": 265.79,
+        "duration": 131.185,
+        "capture_date": "2014-12-16 18:32:55",
+        "file_date": "2014-12-16 18:32:55",
+        "place_name": ""
+    },
+    {
+        "id": 579,
+        "name": "IMG_6463.mp4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Adriana/IMG_6463.mp4",
+        "size_mb": 0.33,
+        "duration": 3.4,
+        "capture_date": "2014-12-25 09:24:57",
+        "file_date": "2014-12-25 09:24:57",
+        "place_name": ""
+    },
+    {
+        "id": 580,
+        "name": "IMG_6489.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Adriana/IMG_6489.MOV",
+        "size_mb": 116.73,
+        "duration": 58.491667,
+        "capture_date": "2014-12-25 20:29:55",
+        "file_date": "2014-12-25 20:29:55",
+        "place_name": ""
+    },
+    {
+        "id": 581,
+        "name": "IMG_6518.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Adriana/IMG_6518.MOV",
+        "size_mb": 17.97,
+        "duration": 8.706667,
+        "capture_date": "2014-12-28 12:18:16",
+        "file_date": "2014-12-28 12:18:16",
+        "place_name": ""
+    },
+    {
+        "id": 582,
+        "name": "IMG_4428.mp4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Varios/IMG_4428.mp4",
+        "size_mb": 2.06,
+        "duration": 20.440792,
+        "capture_date": "2014-07-18 18:33:45",
+        "file_date": "2014-07-18 18:33:45",
+        "place_name": ""
+    },
+    {
+        "id": 583,
+        "name": "IMG_5258.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Varios/IMG_5258.MOV",
+        "size_mb": 42.87,
+        "duration": 20.506667,
+        "capture_date": "2014-09-19 14:20:04",
+        "file_date": "2014-09-19 14:20:04",
+        "place_name": ""
+    },
+    {
+        "id": 584,
+        "name": "IMG_0122.mov",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Varios/IMG_0122.mov",
+        "size_mb": 3.11,
+        "duration": 10.066667,
+        "capture_date": "2015-09-07 22:15:08",
+        "file_date": "2015-09-07 22:15:08",
+        "place_name": ""
+    },
+    {
+        "id": 585,
+        "name": "IMG_0143.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Varios/IMG_0143.MOV",
+        "size_mb": 40.93,
+        "duration": 19.763333,
+        "capture_date": "2015-09-07 22:17:19",
+        "file_date": "2015-09-07 22:17:19",
+        "place_name": ""
+    },
+    {
+        "id": 586,
+        "name": "IMG_1109.mp4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Varios/IMG_1109.mp4",
+        "size_mb": 9.18,
+        "duration": 56.128,
+        "capture_date": "2015-09-07 22:32:49",
+        "file_date": "2015-09-07 22:32:49",
+        "place_name": ""
+    },
+    {
+        "id": 587,
+        "name": "IMG_4420.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Varios/IMG_4420.MOV",
+        "size_mb": 44.28,
+        "duration": 21.4,
+        "capture_date": "2014-07-16 10:34:58",
+        "file_date": "2014-07-16 10:34:58",
+        "place_name": ""
+    },
+    {
+        "id": 588,
+        "name": "IMG_0947.mov",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Varios/IMG_0947.mov",
+        "size_mb": 7.04,
+        "duration": 17.491667,
+        "capture_date": "2015-09-07 22:28:19",
+        "file_date": "2015-09-07 22:28:19",
+        "place_name": ""
+    },
+    {
+        "id": 589,
+        "name": "IMG_0948.mov",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Varios/IMG_0948.mov",
+        "size_mb": 4.11,
+        "duration": 11.0,
+        "capture_date": "2015-09-07 22:27:06",
+        "file_date": "2015-09-07 22:27:06",
+        "place_name": ""
+    },
+    {
+        "id": 590,
+        "name": "IMG_0972.mov",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Varios/IMG_0972.mov",
+        "size_mb": 13.57,
+        "duration": 33.94,
+        "capture_date": "2015-09-07 22:31:21",
+        "file_date": "2015-09-07 22:31:21",
+        "place_name": ""
+    },
+    {
+        "id": 591,
+        "name": "IMG_1031.mp4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Varios/IMG_1031.mp4",
+        "size_mb": 10.43,
+        "duration": 56.876833,
+        "capture_date": "2015-09-07 22:32:03",
+        "file_date": "2015-09-07 22:32:03",
+        "place_name": ""
+    },
+    {
+        "id": 592,
+        "name": "IMG_1064.mp4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Varios/IMG_1064.mp4",
+        "size_mb": 3.62,
+        "duration": 14.892833,
+        "capture_date": "2015-09-07 22:32:11",
+        "file_date": "2015-09-07 22:32:11",
+        "place_name": ""
+    },
+    {
+        "id": 593,
+        "name": "IMG_1070.mp4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Varios/IMG_1070.mp4",
+        "size_mb": 7.17,
+        "duration": 36.416,
+        "capture_date": "2015-09-07 22:32:22",
+        "file_date": "2015-09-07 22:32:22",
+        "place_name": ""
+    },
+    {
+        "id": 594,
+        "name": "IMG_1110.mov",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Varios/IMG_1110.mov",
+        "size_mb": 4.77,
+        "duration": 14.5,
+        "capture_date": "2015-09-07 22:32:31",
+        "file_date": "2015-09-07 22:32:31",
+        "place_name": ""
+    },
+    {
+        "id": 595,
+        "name": "IMG_1111.mp4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Varios/IMG_1111.mp4",
+        "size_mb": 9.07,
+        "duration": 45.12,
+        "capture_date": "2015-09-07 22:34:34",
+        "file_date": "2015-09-07 22:34:34",
+        "place_name": ""
+    },
+    {
+        "id": 596,
+        "name": "IMG_1167.mov",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Varios/IMG_1167.mov",
+        "size_mb": 10.18,
+        "duration": 109.931667,
+        "capture_date": "2015-09-07 22:35:52",
+        "file_date": "2015-09-07 22:35:52",
+        "place_name": ""
+    },
+    {
+        "id": 597,
+        "name": "IMG_3933.mp4",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14 Varios/IMG_3933.mp4",
+        "size_mb": 2.66,
+        "duration": 24.899688,
+        "capture_date": "2014-05-05 20:32:10",
+        "file_date": "2014-05-05 20:32:10",
+        "place_name": ""
+    },
+    {
+        "id": 598,
+        "name": "DSC_0329.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14-5 Bélgica OK/DSC_0329.MOV",
+        "size_mb": 23.91,
+        "duration": 10.5105,
+        "capture_date": "2014-05-15 16:33:48",
+        "file_date": "2014-05-15 16:33:48",
+        "place_name": ""
+    },
+    {
+        "id": 599,
+        "name": "DSC_0330.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14-5 Bélgica OK/DSC_0330.MOV",
+        "size_mb": 8.13,
+        "duration": 3.378375,
+        "capture_date": "2014-05-15 16:34:06",
+        "file_date": "2014-05-15 16:34:06",
+        "place_name": ""
+    },
+    {
+        "id": 600,
+        "name": "DSC_0277.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14-5 Bélgica OK/DSC_0277.MOV",
+        "size_mb": 53.46,
+        "duration": 48.29825,
+        "capture_date": "2014-05-15 11:03:04",
+        "file_date": "2014-05-15 11:03:04",
+        "place_name": ""
+    },
+    {
+        "id": 601,
+        "name": "DSC_0375.MOV",
+        "path": "/media/volume1/@appdata/ContainerManager/all_shares/usbshare1-4/'14-5 Bélgica OK/DSC_0375.MOV",
+        "size_mb": 46.16,
+        "duration": 19.26925,
+        "capture_date": "2014-05-16 18:19:52",
+        "file_date": "2014-05-16 18:19:52",
+        "place_name": ""
     }
 ]
