@@ -1,5 +1,6 @@
 import os
 import json
+import tempfile
 from datetime import datetime
 
 # Apuntamos al fichero real con los 13MB de datos
@@ -20,21 +21,22 @@ def load_json(filepath: str, default):
 
 
 def save_json(filepath: str, data) -> None:
-    """Escritura atómica mediante fichero temporal + os.replace.
+    """Escritura atómica mediante fichero temporal único + os.replace.
 
-    Garantiza que si el proceso muere a mitad de la escritura el fichero
-    original permanece intacto y no queda corrupto.
-    Usa indent=2 en lugar de indent=4 para reducir el tamaño en disco ~30%.
+    Usa tempfile.mkstemp para generar un nombre de temporal único en el mismo
+    directorio que el destino, evitando la condición de carrera cuando
+    media_processor y server escriben concurrentemente sobre el mismo fichero.
     """
-    tmp = filepath + ".tmp"
+    dir_name = os.path.dirname(os.path.abspath(filepath)) or '.'
+    fd, tmp_path = tempfile.mkstemp(dir=dir_name, suffix='.tmp.json')
     try:
-        with open(tmp, "w", encoding="utf-8") as f:
+        with os.fdopen(fd, 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
-        os.replace(tmp, filepath)   # atómico en Linux/Synology
+        os.replace(tmp_path, filepath)   # atómico en Linux/Synology
     except Exception as e:
         log_error("database", str(e))
         try:
-            os.remove(tmp)
+            os.unlink(tmp_path)
         except OSError:
             pass
 
@@ -49,9 +51,10 @@ def log_error(context: str, message: str) -> None:
     if len(errors) > 200:
         errors = errors[-200:]
     try:
-        tmp = ERROR_LOG_FILE + ".tmp"
-        with open(tmp, "w", encoding="utf-8") as f:
+        dir_name = os.path.dirname(os.path.abspath(ERROR_LOG_FILE)) or '.'
+        fd, tmp_path = tempfile.mkstemp(dir=dir_name, suffix='.tmp.json')
+        with os.fdopen(fd, 'w', encoding='utf-8') as f:
             json.dump(errors, f, indent=2, ensure_ascii=False)
-        os.replace(tmp, ERROR_LOG_FILE)
+        os.replace(tmp_path, ERROR_LOG_FILE)
     except Exception:
         pass
