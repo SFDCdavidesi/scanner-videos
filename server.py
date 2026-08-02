@@ -307,7 +307,11 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
             "connect-src 'self' cdn.jsdelivr.net cdn.datatables.net code.jquery.com; "
             "frame-ancestors 'self';"
         )
-        response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+        # HSTS solo en conexiones HTTPS reales (a través del reverse proxy).
+        # Enviarlo en HTTP hace que el navegador fuerce HTTPS para esa IP/dominio
+        # y rompe el acceso interno por http://192.168.x.x:8000.
+        if via_https_proxy:
+            response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
         response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
         response.headers["Permissions-Policy"] = "geolocation=(), microphone=()"
 
