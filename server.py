@@ -429,13 +429,20 @@ def login_post(request: Request, username: str = Form(...), password: str = Form
         
         response = RedirectResponse(url="/app", status_code=status.HTTP_303_SEE_OTHER)
         signed_token = sign_cookie(username)
+        # secure=True solo en HTTPS: en HTTP interno el navegador descartaría
+        # silenciosamente la cookie y el usuario volvería al login sin error.
+        client_host = request.client.host if request.client else ""
+        is_https = (
+            request.headers.get("x-forwarded-proto", "").split(",")[0].strip() == "https"
+            and _is_trusted_proxy(client_host)
+        )
         response.set_cookie(
             key="session_user",
             value=signed_token,
             httponly=True,
-            secure=True,
+            secure=is_https,
             samesite="lax",
-            max_age=SESSION_MAX_AGE,  # Expiración alineada con la firma del token
+            max_age=SESSION_MAX_AGE,
         )
         return response
     
