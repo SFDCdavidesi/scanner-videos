@@ -82,9 +82,9 @@
             controls
             playsinline
             preload="metadata"
-            {% if thumb_url %}poster="{{ thumb_url }}"{% endif %}
+            {% if thumb_src %}poster="{{ thumb_src }}"{% endif %}
         >
-            <source src="{{ video_url }}" type="video/mp4">
+            <source src="{{ video_src }}" type="video/mp4">
             Tu navegador no soporta la reproducción de vídeo.
         </video>
         <p class="footer">Compartido desde el explorador de vídeos</p>

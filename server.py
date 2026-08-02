@@ -756,9 +756,13 @@ def share_video_page(video_id: int, request: Request):
         parts.append(place)
     description = " · ".join(parts) if parts else "Vídeo compartido"
 
-    video_url = f"{base_url}/share/{video_id}/video.mp4"
-    share_url = f"{base_url}/share/{video_id}"
+    video_url = f"{base_url}/share/{video_id}/video.mp4"  # absoluta → OG tags
+    share_url = f"{base_url}/share/{video_id}"             # absoluta → OG tags
     thumb_url = f"{base_url}/static/{video['thumb']}" if video.get("thumb") else ""
+    # URLs relativas para el player HTML: evitan mixed-content cuando el
+    # reverse proxy no propaga X-Forwarded-Proto correctamente.
+    video_src = f"/share/{video_id}/video.mp4"
+    thumb_src = f"/static/{video['thumb']}" if video.get("thumb") else ""
 
     return templates.TemplateResponse(request, "share.html", {
         "title":       title,
@@ -766,6 +770,8 @@ def share_video_page(video_id: int, request: Request):
         "video_url":   video_url,
         "share_url":   share_url,
         "thumb_url":   thumb_url,
+        "video_src":   video_src,
+        "thumb_src":   thumb_src,
     })
 
 
