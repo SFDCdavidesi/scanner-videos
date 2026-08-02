@@ -940,6 +940,33 @@ def share_video_download(video_id: int, request: Request):
     return response
 
 
+@app.get("/api/videos/{video_id}/download")
+def download_video(video_id: int, request: Request):
+    """
+    Descarga directa del vídeo original desde la app principal.
+    Requiere autenticación. Sirve el fichero nativo (sin transcodificar)
+    con Content-Disposition: attachment para forzar la descarga.
+    """
+    verificar_credenciales(request)
+    videos = _load_videos_cached()
+    video = next((v for v in videos if v.get("id") == video_id), None)
+    if not video:
+        raise HTTPException(status_code=404, detail="Vídeo no encontrado.")
+    path = video.get("path", "")
+    if not path or not os.path.exists(path):
+        raise HTTPException(status_code=404, detail="El vídeo no existe en el disco.")
+
+    basename = os.path.basename(path)
+    # RFC 6266: filename* para soporte de nombres con caracteres especiales
+    from urllib.parse import quote as _url_quote
+    filename_star = "UTF-8''" + _url_quote(basename, safe="")
+    disposition = f'attachment; filename="{basename}"; filename*={filename_star}'
+
+    response = _serve_with_ranges(path, request)
+    response.headers["Content-Disposition"] = disposition
+    return response
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)

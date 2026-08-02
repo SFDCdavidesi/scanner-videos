@@ -179,6 +179,10 @@ function _initDataTable() {
                                         onclick="copyDirectLink(${row.id})">
                                     <i class="bi bi-whatsapp"></i>
                                 </button>
+                                <a class="btn btn-sm btn-secondary" title="Descargar"
+                                   href="/api/videos/${row.id}/download" download>
+                                    <i class="bi bi-download"></i>
+                                </a>
                                 <button class="btn btn-sm btn-primary" title="Reproducir"
                                         onclick="playVideo(${row.id}, '${safeName}')">
                                     <i class="bi bi-play-fill"></i>
