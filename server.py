@@ -516,17 +516,19 @@ def get_dashboard_stats(request: Request):
     total_vids = len(valid_videos)
     
     if total_vids == 0:
-        return {"total_videos": 0, "total_size_gb": 0, "avg_size_mb": 0, "total_duration_hrs": 0, "avg_duration_sec": 0}
+        return {"total_videos": 0, "total_size_gb": 0, "avg_size_mb": 0, "total_duration_hrs": 0, "avg_duration_sec": 0, "thumbs_count": 0}
         
     total_size = sum(float(v.get("size_mb", 0)) for v in valid_videos if v.get("size_mb") is not None)
     total_duration = sum(float(v.get("duration", 0)) for v in valid_videos if v.get("duration") is not None)
+    thumbs_count = sum(1 for v in valid_videos if v.get("thumb"))
     
     return {
         "total_videos": total_vids,
         "total_size_gb": round(total_size / 1024, 2),
         "avg_size_mb": round(total_size / total_vids, 2),
         "total_duration_hrs": round(total_duration / 3600, 2),
-        "avg_duration_sec": round(total_duration / total_vids, 2)
+        "avg_duration_sec": round(total_duration / total_vids, 2),
+        "thumbs_count": thumbs_count,
     }
 
 @app.get("/api/status")

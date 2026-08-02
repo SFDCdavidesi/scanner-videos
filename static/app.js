@@ -281,6 +281,7 @@ function loadStats() {
             document.getElementById('statTotalSize').innerText  = (data.total_size_gb      || 0).toLocaleString('es-ES') + ' GB';
             document.getElementById('statTotalHours').innerText = (data.total_duration_hrs || 0).toLocaleString('es-ES') + ' h';
             document.getElementById('statAvgSize').innerText    = (data.avg_size_mb        || 0).toLocaleString('es-ES') + ' MB';
+            document.getElementById('statThumbsCount').innerText = (data.thumbs_count      || 0).toLocaleString('es-ES');
         })
         .catch(err => console.error("Error al cargar estadísticas", err));
 }
