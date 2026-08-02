@@ -27,13 +27,13 @@
             <div class="d-flex align-items-center gap-2 flex-wrap mt-2 mt-md-0">
                 <!-- Controles de escaneo (solo admin) -->
                 <div class="d-flex gap-2 mobile-stack-buttons" id="adminScanButtons" style="display: none !important;">
-                    <button class="btn btn-outline-secondary btn-sm" onclick="triggerScan(true)">
+                    <button class="btn btn-outline-secondary btn-sm" id="btnRetomar" onclick="triggerScan(true)">
                         <i class="bi bi-play-circle"></i> Retomar
                     </button>
                     <button class="btn btn-outline-danger btn-sm" id="btnCancelScan" style="display: none;" onclick="stopScan()">
                         <i class="bi bi-stop-circle"></i> Cancelar
                     </button>
-                    <button class="btn btn-outline-primary btn-sm" onclick="triggerScan(false)">
+                    <button class="btn btn-outline-primary btn-sm" id="btnReiniciarScan" onclick="triggerScan(false)">
                         <i class="bi bi-arrow-clockwise"></i> Reiniciar Escaneo
                     </button>
                 </div>

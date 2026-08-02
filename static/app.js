@@ -411,10 +411,15 @@ function checkStatus() {
         .then(r => r.json())
         .then(data => {
             const statusEl  = document.getElementById('statusText');
-            const cancelBtn = document.getElementById('btnCancelScan');
+            const cancelBtn  = document.getElementById('btnCancelScan');
+            const retomarBtn = document.getElementById('btnRetomar');
+            const reiniciarBtn = document.getElementById('btnReiniciarScan');
 
-            if (cancelBtn && isAdmin) {
-                cancelBtn.style.display = data.is_completed === false ? 'inline-block' : 'none';
+            if (isAdmin) {
+                const running = data.is_completed === false;
+                if (cancelBtn)    cancelBtn.style.display    = running ? 'inline-block' : 'none';
+                if (retomarBtn)   retomarBtn.style.display   = running ? 'none' : 'inline-block';
+                if (reiniciarBtn) reiniciarBtn.style.display = running ? 'none' : 'inline-block';
             }
 
             if (!statusEl) return;
