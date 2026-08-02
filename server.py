@@ -283,9 +283,10 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         # protección real contra XSS.
         response.headers["Content-Security-Policy"] = (
             "default-src 'self'; "
-            "script-src 'self' 'unsafe-inline'; "
-            "style-src 'self' 'unsafe-inline'; "
-            "img-src 'self' data:; "
+            "script-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdn.datatables.net; "
+            "style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdn.datatables.net; "
+            "font-src 'self' cdn.jsdelivr.net; "
+            "img-src 'self' data: cdn.datatables.net; "
             "media-src 'self' blob:; "
             "frame-ancestors 'self';"
         )
