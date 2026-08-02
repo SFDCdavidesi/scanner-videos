@@ -44,10 +44,15 @@
                     <button class="btn btn-outline-danger btn-sm" id="btnCancelScan" style="display: none;" onclick="stopScan()"><i class="bi bi-stop-circle"></i> Cancelar</button>
                     <button class="btn btn-outline-primary btn-sm" onclick="triggerScan(false)"><i class="bi bi-arrow-clockwise"></i> Reiniciar Escaneo</button>
                 </div>
-                <!-- Botón de Cerrar Sesión visible para todos -->
-                <button class="btn btn-outline-dark btn-sm" onclick="location.href='/logout'" title="Cerrar sesión / Cambiar de usuario">
-                    <i class="bi bi-box-arrow-right"></i> Salir
-                </button>
+                <!-- Usuario activo + Cerrar Sesión -->
+                <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-secondary fs-6 px-3 py-2" id="currentUserBadge" title="Usuario activo">
+                        <i class="bi bi-person-fill me-1"></i><span id="currentUsername">...</span>
+                    </span>
+                    <button class="btn btn-outline-dark btn-sm" onclick="location.href='/logout'" title="Cerrar sesión">
+                        <i class="bi bi-box-arrow-right"></i> Salir
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -226,8 +231,9 @@
             .then(r => r.json())
             .then(userInfo => {
                 isAdmin = userInfo.is_admin;
-                
+                document.getElementById('currentUsername').textContent = userInfo.username || '?';
                 if (isAdmin) {
+                    document.getElementById('currentUserBadge').classList.replace('bg-secondary', 'bg-danger');
                     document.getElementById('adminScanButtons').style.display = 'flex';
                     document.getElementById('btnClearErrors').style.display = 'inline-block';
                 }
