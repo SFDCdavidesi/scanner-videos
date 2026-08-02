@@ -325,9 +325,13 @@ function scanSpecificFolder(folderPath) {
 // ── Enlace directo (WhatsApp) ─────────────────────────────────────────────────
 function copyDirectLink(id) {
     const { protocol, hostname, port } = window.location;
-    const isLocal = hostname.startsWith("192.168.") || hostname === "localhost" || hostname === "127.0.0.1";
-    const base    = protocol + "//" + hostname + (isLocal && port ? ":" + port : "");
-    const url     = `${base}/share/${id}/video.mp4`;
+    // Siempre incluir el puerto si está presente — funciona tanto en red local
+    // (192.168.x.x:8000) como via DDNS directo (host:8000) o reverse proxy HTTPS
+    // (sin puerto explícito cuando es el 443 estándar)
+    const base = protocol + "//" + hostname + (port ? ":" + port : "");
+    // Compartir la página HTML (/share/{id}) — no el .mp4 directo.
+    // La página incluye Open Graph tags para preview y un <video> player nativo.
+    const url  = `${base}/share/${id}`;
 
     if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard.writeText(url)

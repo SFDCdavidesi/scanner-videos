@@ -719,6 +719,56 @@ def stream_video(video_id: int, request: Request):
     else:
         return FileResponse(path)
 
+@app.get("/share/{video_id}", response_class=HTMLResponse)
+def share_video_page(video_id: int, request: Request):
+    """
+    Página pública HTML para compartir por WhatsApp/Telegram/enlace.
+    Incluye Open Graph tags para preview y un player <video> nativo.
+    No requiere autenticación.
+    """
+    videos = _load_videos_cached()
+    video = next((v for v in videos if v.get("id") == video_id), None)
+    if not video:
+        raise HTTPException(status_code=404, detail="Vídeo no encontrado.")
+
+    # Construir base URL correctamente para acceso directo Y a través de reverse proxy
+    # (Synology HTTPS → HTTP:8000).  Si la petición llega de un proxy de confianza,
+    # usar X-Forwarded-Proto para el esquema; el Host header ya contiene el host externo.
+    client_host = request.client.host if request.client else ""
+    x_proto = request.headers.get("x-forwarded-proto", "")
+    scheme  = x_proto.split(",")[0].strip() if (x_proto and _is_trusted_proxy(client_host)) else request.url.scheme
+    host    = request.headers.get("host", "") or request.url.netloc
+    base_url = f"{scheme}://{host}"
+
+    title = os.path.basename(video.get("path", f"Video {video_id}"))
+    title = os.path.splitext(title)[0]
+
+    dur = video.get("duration", 0)
+    size_mb = video.get("size_mb", 0)
+    place = video.get("place_name", "")
+    parts = []
+    if dur and dur > 0:
+        mins, secs = divmod(int(dur), 60)
+        parts.append(f"{mins}:{secs:02d} min")
+    if size_mb and size_mb > 0:
+        parts.append(f"{size_mb:.0f} MB")
+    if place:
+        parts.append(place)
+    description = " · ".join(parts) if parts else "Vídeo compartido"
+
+    video_url = f"{base_url}/share/{video_id}/video.mp4"
+    share_url = f"{base_url}/share/{video_id}"
+    thumb_url = f"{base_url}/static/{video['thumb']}" if video.get("thumb") else ""
+
+    return templates.TemplateResponse(request, "share.html", {
+        "title":       title,
+        "description": description,
+        "video_url":   video_url,
+        "share_url":   share_url,
+        "thumb_url":   thumb_url,
+    })
+
+
 @app.get("/share/{video_id}/video.mp4")
 def share_video_whatsapp(video_id: int, request: Request):
     """
