@@ -3,3 +3,18 @@ static/thumbs/
 __pycache__/
 .env
 static/transcoded/
+
+# Runtime data (NAS-generated — never commit)
+videos_db.json
+videos_db.json.bak
+videos.json
+folder_stats.json
+geo_cache.json
+scan_state.json
+scanner_state.json
+state.json
+errors.json
+auth.json
+
+# Secret key (generated at runtime)
+secret.key

@@ -20,8 +20,8 @@ from datetime import datetime
 from database import load_json, save_json, log_error, DB_FILE
 
 # ── Configuración ─────────────────────────────────────────────────────────────
-BATCH_SIZE: int = 20
-SLEEP_BETWEEN_BATCHES: float = 2.0
+BATCH_SIZE: int = 50                  # vídeos por lote (era 20)
+SLEEP_BETWEEN_BATCHES: float = 0.5   # segundos entre lotes (era 2.0)
 SLEEP_IDLE: float = 300.0
 SLEEP_CYCLE: float = 60.0
 FFPROBE_TIMEOUT: int = 10

@@ -11,6 +11,11 @@ SYSTEM_DIR_NAMES: frozenset[str] = frozenset({
     "lost+found", ".DS_Store", ".Trash",
     # Papelera de reciclaje de Windows (discos USB conectados al NAS)
     "$RECYCLE.BIN", "$RECYCLE", "RECYCLER",
+    # Synology Package Center instala apps bajo @appstore (Node.js, Docker, etc.)
+    # — contiene node_modules masivos sin vídeos
+    "@appstore",
+    # node_modules en cualquier punto del árbol
+    "node_modules",
 })
 
 # ─── Prefijos de rutas completas excluidas ────────────────────────────────────
