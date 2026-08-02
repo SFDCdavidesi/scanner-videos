@@ -7,6 +7,7 @@ import secrets
 import hmac
 import hashlib
 import base64
+import ipaddress
 from datetime import datetime
 from contextlib import asynccontextmanager
 
@@ -24,23 +25,62 @@ SECRET_KEY_FILE = "secret.key"
 LOGS_DIR = "logs"
 os.makedirs(LOGS_DIR, exist_ok=True)
 
-EXCLUDED_FOLDERS = ["/media/volumeUSB3/usbshare3-2"]
+# Rutas excluidas del índice (sincronizar con EXCLUDED_PATH_PREFIXES en scanner.py)
+EXCLUDED_FOLDERS: list[str] = ["/media/volumeUSB3/usbshare3-2"]
 
-# Control de intentos fallidos para Rate Limiting (Anti-Fuerza Bruta)
-LOGIN_ATTEMPTS = {}
+# ─── Rate limiting ────────────────────────────────────────────────────────────
+LOGIN_ATTEMPTS: dict = {}
 MAX_LOGIN_ATTEMPTS = 5
 LOCKOUT_TIME_SECONDS = 300  # 5 minutos de bloqueo
 
+# ─── IPs de proxies de confianza (Synology reverse proxy, localhost) ──────────
+# Solo se aceptan cabeceras X-Forwarded-For / X-Real-IP cuando la conexión
+# directa proviene de una de estas redes.  Ajusta si tu proxy está en otra IP.
+_TRUSTED_PROXY_NETS: list[ipaddress.IPv4Network | ipaddress.IPv6Network] = [
+    ipaddress.ip_network("127.0.0.0/8"),
+    ipaddress.ip_network("::1/128"),
+    ipaddress.ip_network("10.0.0.0/8"),
+    ipaddress.ip_network("172.16.0.0/12"),
+    ipaddress.ip_network("192.168.0.0/16"),
+]
+
+
+def _is_trusted_proxy(host: str) -> bool:
+    try:
+        addr = ipaddress.ip_address(host)
+        return any(addr in net for net in _TRUSTED_PROXY_NETS)
+    except ValueError:
+        return False
+
+
 def get_client_ip(request: Request) -> str:
-    for header in ["x-forwarded-for", "x-real-ip", "cf-connecting-ip"]:
-        val = request.headers.get(header)
-        if val:
-            ip = val.split(",")[0].strip()
-            if ip:
-                return ip
-    if request.client and request.client.host:
-        return request.client.host
-    return "unknown"
+    """Devuelve la IP real del cliente.
+
+    Solo confía en X-Forwarded-For / X-Real-IP cuando la conexión directa
+    proviene de un proxy de confianza, evitando el bypass del rate-limiting.
+    """
+    direct_host = request.client.host if request.client else ""
+    if _is_trusted_proxy(direct_host):
+        # Tomamos el último IP añadido por nuestro proxy (el más a la derecha
+        # que no sea el propio proxy) para evitar spoofing por el cliente.
+        xff = request.headers.get("x-forwarded-for", "")
+        if xff:
+            candidates = [ip.strip() for ip in xff.split(",")]
+            # El proxy de Synology añade al final; tomamos el primero no-privado
+            for candidate in reversed(candidates):
+                try:
+                    addr = ipaddress.ip_address(candidate)
+                    if not any(addr in net for net in _TRUSTED_PROXY_NETS):
+                        return candidate
+                except ValueError:
+                    continue
+            # Si todos son privados (red local), devolvemos el primero
+            if candidates:
+                return candidates[0]
+        x_real = request.headers.get("x-real-ip", "").strip()
+        if x_real:
+            return x_real
+    return direct_host or "unknown"
 
 def is_ip_locked(ip: str) -> bool:
     if ip in LOGIN_ATTEMPTS:
@@ -85,27 +125,47 @@ def get_or_create_secret_key():
 
 SECRET_KEY = get_or_create_secret_key()
 
+# Duración máxima de sesión en segundos (24 horas)
+SESSION_MAX_AGE = 86400
+
+
 def sign_cookie(username: str) -> str:
-    message = username.encode("utf-8")
+    """Genera token firmado con timestamp para sesiones con expiración."""
+    ts = str(int(time.time()))
+    payload = f"{username}|{ts}"
+    message = payload.encode("utf-8")
     signature = hmac.new(SECRET_KEY.encode("utf-8"), message, hashlib.sha256).digest()
     sig_b64 = base64.urlsafe_b64encode(signature).decode("utf-8").rstrip("=")
-    return f"{username}.{sig_b64}"
+    return f"{payload}.{sig_b64}"
+
 
 def verify_cookie(token: str) -> str | None:
+    """Verifica firma e integridad; rechaza sesiones expiradas."""
     if not token or "." not in token:
         return None
-    parts = token.split(".", 1)
-    if len(parts) != 2:
+    payload, _, sig_b64 = token.rpartition(".")
+    if not payload or not sig_b64:
         return None
-    username, sig_b64 = parts
-    
-    message = username.encode("utf-8")
+
+    message = payload.encode("utf-8")
     expected_sig = hmac.new(SECRET_KEY.encode("utf-8"), message, hashlib.sha256).digest()
     expected_sig_b64 = base64.urlsafe_b64encode(expected_sig).decode("utf-8").rstrip("=")
-    
-    if hmac.compare_digest(sig_b64, expected_sig_b64):
-        return username
-    return None
+
+    if not hmac.compare_digest(sig_b64, expected_sig_b64):
+        return None
+
+    # Verificar expiración del timestamp
+    parts = payload.split("|")
+    if len(parts) != 2:
+        return None
+    username, ts_str = parts
+    try:
+        if time.time() - int(ts_str) > SESSION_MAX_AGE:
+            return None
+    except ValueError:
+        return None
+
+    return username
 
 def hash_password(password: str) -> str:
     salt = os.urandom(16)
@@ -123,30 +183,47 @@ def verify_password(stored: str, provided: str) -> bool:
     except Exception:
         return False
 
-def load_auth():
+# ─── Cache de autenticación ──────────────────────────────────────────────────
+# Se invalida automáticamente al detectar cambio en el fichero.
+_auth_cache: dict = {}
+_auth_cache_mtime: float = 0.0
+
+
+def load_auth() -> dict:
+    global _auth_cache, _auth_cache_mtime
+
     default_plain = {"admin": "cambiame", "familia": "david2026"}
     default_auth = {k: hash_password(v) for k, v in default_plain.items()}
-    
+
     if os.path.exists(AUTH_FILE):
         try:
+            current_mtime = os.path.getmtime(AUTH_FILE)
+            if _auth_cache and current_mtime == _auth_cache_mtime:
+                return _auth_cache
+
             with open(AUTH_FILE, "r", encoding="utf-8") as f:
                 data = json.load(f)
-                if isinstance(data, dict) and len(data) > 0:
-                    updated = False
-                    for k, v in data.items():
-                        if ':' not in v:
-                            data[k] = hash_password(v)
-                            updated = True
-                    if updated:
-                        with open(AUTH_FILE, "w", encoding="utf-8") as f_out:
-                            json.dump(data, f_out, indent=4)
-                    return data
+            if isinstance(data, dict) and data:
+                updated = False
+                for k, v in data.items():
+                    if ":" not in v:
+                        data[k] = hash_password(v)
+                        updated = True
+                if updated:
+                    with open(AUTH_FILE, "w", encoding="utf-8") as f_out:
+                        json.dump(data, f_out, indent=2)
+                _auth_cache = data
+                _auth_cache_mtime = os.path.getmtime(AUTH_FILE)
+                return data
         except Exception:
             pass
+
     try:
         with open(AUTH_FILE, "w", encoding="utf-8") as f:
-            json.dump(default_auth, f, indent=4)
-    except:
+            json.dump(default_auth, f, indent=2)
+        _auth_cache = default_auth
+        _auth_cache_mtime = os.path.getmtime(AUTH_FILE)
+    except Exception:
         pass
     return default_auth
 
@@ -196,25 +273,43 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         ip_cliente = get_client_ip(request)
         metodo = request.method
         url = request.url.path
-        
+
         response = await call_next(request)
-        
-        # Inyectar cabeceras de seguridad en todas las respuestas HTTP
+
+        # ── Cabeceras de seguridad ────────────────────────────────────────────
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["X-Frame-Options"] = "SAMEORIGIN"
-        response.headers["X-XSS-Protection"] = "1; mode=block"
+        # X-XSS-Protection está obsoleto en navegadores modernos; CSP es la
+        # protección real contra XSS.
+        response.headers["Content-Security-Policy"] = (
+            "default-src 'self'; "
+            "script-src 'self' 'unsafe-inline'; "
+            "style-src 'self' 'unsafe-inline'; "
+            "img-src 'self' data:; "
+            "media-src 'self' blob:; "
+            "frame-ancestors 'self';"
+        )
         response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
-        
-        # Registrar acceso en log
-        fecha_hoy = datetime.now().strftime("%Y-%m-%d")
-        hora_exacta = datetime.now().strftime("%H:%M:%S")
-        archivo_log = os.path.join(LOGS_DIR, f"accesos_{fecha_hoy}.log")
-        linea_log = f"[{hora_exacta}] IP: {ip_cliente} | {metodo} {url} | Código: {response.status_code}\n"
+        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        response.headers["Permissions-Policy"] = "geolocation=(), microphone=()"
+
+        # ── Log de acceso (buffered, no bloqueante) ───────────────────────────
+        # Usamos os.open con O_APPEND|O_CREAT que es atómico en Linux/NAS.
+        # No llamamos a funciones pesadas dentro del event loop; sólo un
+        # write() de una línea pequeña.
+        now = datetime.now()
+        archivo_log = os.path.join(LOGS_DIR, f"accesos_{now.strftime('%Y-%m-%d')}.log")
+        linea_log = (
+            f"[{now.strftime('%H:%M:%S')}] IP: {ip_cliente} | "
+            f"{metodo} {url} | Código: {response.status_code}\n"
+        ).encode("utf-8")
         try:
-            with open(archivo_log, "a", encoding="utf-8") as f:
-                f.write(linea_log)
-        except Exception:
+            fd = os.open(archivo_log, os.O_WRONLY | os.O_CREAT | os.O_APPEND, 0o644)
+            os.write(fd, linea_log)
+            os.close(fd)
+        except OSError:
             pass
+
         return response
 
 ACTIVE_SCANNER_PROCESS = None
@@ -312,11 +407,12 @@ def login_post(request: Request, username: str = Form(...), password: str = Form
         response = RedirectResponse(url="/app", status_code=status.HTTP_303_SEE_OTHER)
         signed_token = sign_cookie(username)
         response.set_cookie(
-            key="session_user", 
-            value=signed_token, 
-            httponly=True, 
-            secure=True,     # Exigir HTTPS estrictamente para la cookie de sesión
-            samesite="lax"
+            key="session_user",
+            value=signed_token,
+            httponly=True,
+            secure=True,
+            samesite="lax",
+            max_age=SESSION_MAX_AGE,  # Expiración alineada con la firma del token
         )
         return response
     
@@ -341,17 +437,39 @@ def get_user_info(request: Request):
     username = verificar_credenciales(request)
     return {"username": username, "is_admin": (username == "admin")}
 
+# ─── Cache de vídeos en memoria ──────────────────────────────────────────────
+# Evita deserializar el JSON completo (hasta 13 MB) en cada petición.
+_videos_cache: list[dict] = []
+_videos_cache_mtime: float = 0.0
+VIDEOS_CACHE_TTL: float = 30.0  # segundos antes de releer el fichero
+
+
+def _load_videos_cached() -> list[dict]:
+    """Devuelve la lista de vídeos usando caché invalidada por mtime."""
+    global _videos_cache, _videos_cache_mtime
+    try:
+        current_mtime = os.path.getmtime(DB_FILE)
+    except OSError:
+        return _videos_cache
+
+    if _videos_cache and (current_mtime == _videos_cache_mtime):
+        return _videos_cache
+
+    _videos_cache = load_json(DB_FILE, [])
+    _videos_cache_mtime = current_mtime
+    return _videos_cache
+
+
 @app.get("/api/videos")
 def get_videos(request: Request):
     verificar_credenciales(request)
-    videos = load_json(DB_FILE, [])
+    videos = _load_videos_cached()
     categories = load_categories()
     valid_videos = []
-    
+
     for idx, v in enumerate(videos):
         if v.get("is_duplicate", False):
             continue
-            
         v_path = v.get("path", "")
         if any(v_path.startswith(exc) for exc in EXCLUDED_FOLDERS):
             continue
@@ -360,7 +478,7 @@ def get_videos(request: Request):
         vid_id = str(v_copy.get("id", idx))
         v_copy["category"] = categories.get(vid_id, "")
         valid_videos.append(v_copy)
-        
+
     return valid_videos
 
 @app.get("/api/categories")
@@ -384,7 +502,7 @@ def set_video_category(req: CategoryRequest, request: Request):
 @app.get("/api/dashboard_stats")
 def get_dashboard_stats(request: Request):
     verificar_credenciales(request)
-    videos = load_json(DB_FILE, [])
+    videos = _load_videos_cached()
     valid_videos = [v for v in videos if not v.get("is_duplicate", False) and not any(v.get("path", "").startswith(exc) for exc in EXCLUDED_FOLDERS)]
     total_vids = len(valid_videos)
     
@@ -406,7 +524,7 @@ def get_dashboard_stats(request: Request):
 def get_status(request: Request):
     verificar_credenciales(request)
     state = load_json(STATE_FILE, {})
-    videos = load_json(DB_FILE, [])
+    videos = _load_videos_cached()
     state["total_count"] = len(videos)
     global ACTIVE_SCANNER_PROCESS
     if state.get("is_completed") is False:
@@ -524,7 +642,7 @@ def ffmpeg_stream_generator(filepath: str):
 @app.get("/api/stream")
 def stream_video(video_id: int, request: Request):
     verificar_credenciales(request)
-    videos = load_json(DB_FILE, [])
+    videos = _load_videos_cached()
     path = next((v.get("path") for v in videos if v.get("id") == video_id), None)
     if not path or not os.path.exists(path):
         raise HTTPException(status_code=404, detail="El vídeo no existe en el disco.")
@@ -535,7 +653,9 @@ def stream_video(video_id: int, request: Request):
 
 @app.get("/share/{video_id}/video.mp4")
 def share_video_whatsapp(video_id: int):
-    videos = load_json(DB_FILE, [])
+    # Endpoint sin autenticación para compartir por enlace directo (WhatsApp, etc.).
+    # El video_id no es secreto, pero la URL completa sí actúa como token.
+    videos = _load_videos_cached()
     path = next((v.get("path") for v in videos if v.get("id") == video_id), None)
     if not path or not os.path.exists(path):
         raise HTTPException(status_code=404, detail="El vídeo no existe en el disco.")
