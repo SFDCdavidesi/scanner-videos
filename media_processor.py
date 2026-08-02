@@ -24,9 +24,10 @@ BATCH_SIZE: int = 50                  # vídeos por lote (era 20)
 SLEEP_BETWEEN_BATCHES: float = 0.5   # segundos entre lotes (era 2.0)
 SLEEP_IDLE: float = 300.0
 SLEEP_CYCLE: float = 60.0
-FFPROBE_TIMEOUT: int = 10
-FFMPEG_TIMEOUT: int = 15
+FFPROBE_TIMEOUT: int = 30            # segundos (era 10; ficheros grandes en NAS necesitan más)
+FFMPEG_TIMEOUT: int = 30             # segundos (era 15)
 MIN_SIZE_BYTES: int = 100 * 1024  # 100 KB
+MAX_PROBE_FAILURES: int = 3          # reintentos antes de marcar geo_failed
 
 THUMBS_DIR: str = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static", "thumbs")
 THUMB_WIDTH: int = 400
@@ -156,14 +157,20 @@ def _process_batch(videos: list[dict], pending_indices: list[int]) -> tuple[list
         if duration <= 0.0:
             duration = _get_duration(path)
             if duration <= 0.0:
-                videos[idx]["geo_failed"] = True
-                log_error(
-                    "media_processor",
-                    f"Entrada irrecuperable (ffprobe falla): {path}",
-                )
+                # Error transitorio (timeout, disco girando, etc.): usar contador
+                # de reintentos en lugar de marcar geo_failed de inmediato.
+                fail_count = int(v.get("probe_fail_count", 0)) + 1
+                videos[idx]["probe_fail_count"] = fail_count
+                if fail_count >= MAX_PROBE_FAILURES:
+                    videos[idx]["geo_failed"] = True
+                    log_error(
+                        "media_processor",
+                        f"ffprobe falló {fail_count} veces, descartando: {path}",
+                    )
                 changed = True
                 continue
             videos[idx]["duration"] = round(duration, 2)
+            videos[idx].pop("probe_fail_count", None)  # resetear contador si éxito
             changed = True
 
         # Extraer place_name si falta

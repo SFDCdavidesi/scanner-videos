@@ -609,6 +609,22 @@ def delete_video(req: DeleteRequest, request: Request):
         return {"success": True}
     raise HTTPException(status_code=404, detail="Vídeo no encontrado.")
 
+@app.post("/api/admin/reset_geo_failed")
+def reset_geo_failed(request: Request):
+    """Limpia el flag geo_failed y probe_fail_count para que media_processor reintente."""
+    verify_admin(request)
+    videos = load_json(DB_FILE, [])
+    count = 0
+    for v in videos:
+        if v.get("geo_failed") or v.get("probe_fail_count"):
+            v.pop("geo_failed", None)
+            v.pop("probe_fail_count", None)
+            count += 1
+    if count:
+        save_json(DB_FILE, videos)
+        launch_geolocator_low_priority()
+    return {"reset": count}
+
 def needs_transcoding(filepath: str) -> bool:
     ext = os.path.splitext(filepath)[1].lower()
     if ext not in {".mp4", ".webm"}:
