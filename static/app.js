@@ -41,6 +41,12 @@ $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
 
     if ($('#filterWithThumb').is(':checked') && !rowData.thumb) return false;
 
+    const sizeMin = parseFloat($('#filterSizeMin').val());
+    const sizeMax = parseFloat($('#filterSizeMax').val());
+    const rowSize = parseFloat(rowData.size_mb) || 0;
+    if (!isNaN(sizeMin) && rowSize < sizeMin) return false;
+    if (!isNaN(sizeMax) && rowSize > sizeMax) return false;
+
     if (startDate || endDate) {
         if (!rowCaptureDate || rowCaptureDate === "No disponible") return false;
         const rowDateOnly = rowCaptureDate.substring(0, 10);
@@ -75,6 +81,7 @@ $(document).ready(function () {
 
     $('#filterLocation, #filterCategory, #filterDateText, #filterStartDate, #filterEndDate').on('keyup change', () => { if (table) table.draw(); });
     $('#filterWithThumb').on('change', () => { if (table) table.draw(); });
+    $('#filterSizeMin, #filterSizeMax').on('input change', () => { if (table) table.draw(); });
 
     setInterval(checkStatus, 3000);
 });
@@ -294,6 +301,7 @@ function _fallbackCopy(text) {
 // ── Filtros ───────────────────────────────────────────────────────────────────
 function resetFilters() {
     $('#filterLocation, #filterCategory, #filterDateText, #filterStartDate, #filterEndDate').val('');
+    $('#filterSizeMin, #filterSizeMax').val('');
     $('#filterWithThumb').prop('checked', false);
     if (table) table.draw();
 }
