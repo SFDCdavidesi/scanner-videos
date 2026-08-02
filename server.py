@@ -40,7 +40,7 @@ _TRUSTED_PROXY_NETS: list[ipaddress.IPv4Network | ipaddress.IPv6Network] = [
     ipaddress.ip_network("127.0.0.0/8"),
     ipaddress.ip_network("::1/128"),
     ipaddress.ip_network("10.0.0.0/8"),
-    ipaddress.ip_network("172.16.0.0/12"),
+    ipaddress.ip_network("172.17.0.1/32"),   # Docker bridge gateway del NAS Synology
     ipaddress.ip_network("192.168.0.0/16"),
 ]
 
