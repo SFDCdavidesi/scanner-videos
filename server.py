@@ -340,7 +340,7 @@ def launch_geolocator_low_priority():
     if ACTIVE_GEOLOCATOR_PROCESS and ACTIVE_GEOLOCATOR_PROCESS.poll() is None:
         return
     try:
-        cmd = ["nice", "-n", "19", sys.executable, "geolocator.py"]
+        cmd = ["nice", "-n", "19", sys.executable, "media_processor.py"]
         ACTIVE_GEOLOCATOR_PROCESS = subprocess.Popen(
             cmd, shell=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
         )

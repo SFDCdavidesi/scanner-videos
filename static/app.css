@@ -72,3 +72,10 @@ body {
         background-color: #0d6efd;
     }
 }
+
+/* ── Miniatura flotante ───────────────────────────────────────────────────── */
+/* Cursor de lupa sobre el trigger (nombre + emoji) — solo escritorio         */
+@media (hover: hover) {
+    .thumb-trigger { cursor: default; }
+    .thumb-trigger .thumb-icon { cursor: zoom-in; font-size: .85em; }
+}

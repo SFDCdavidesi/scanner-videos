@@ -1,4 +1,4 @@
-auth.json
-logs/
-auth.json
-s
+static/thumbs/
+*.pyc
+__pycache__/
+.env

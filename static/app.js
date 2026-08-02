@@ -83,7 +83,27 @@ function _initDataTable() {
         ajax:        { url: '/api/videos', dataSrc: '' },
         deferRender: true,
         language:    { url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json' },
-        responsive:  true,
+        responsive: {
+            details: {
+                renderer: function(api, rowIdx, columns) {
+                    const row    = api.row(rowIdx).data();
+                    const hidden = columns.filter(col => col.hidden);
+
+                    let html = '';
+                    if (row.thumb) {
+                        html += '<div class="text-center mb-2">' +
+                            '<img src="/static/' + row.thumb + '" ' +
+                            'style="max-width:100%;width:400px;border-radius:8px;" loading="lazy" alt="Miniatura">' +
+                            '</div>';
+                    }
+                    const rows = hidden.map(col =>
+                        '<tr><td class="fw-bold pe-2" style="white-space:nowrap">' + col.title + ':</td>' +
+                        '<td>' + col.data + '</td></tr>'
+                    ).join('');
+                    return (html + (rows ? '<table class="table table-sm mb-0">' + rows + '</table>' : '')) || false;
+                }
+            }
+        },
         columns: [
             {
                 data: 'name',
@@ -91,10 +111,15 @@ function _initDataTable() {
                 render(data, type, row) {
                     const safeName    = _escapeName(row.name);
                     const displayName = _escapeHtml(row.name);
-                    return `<a href="javascript:void(0);" onclick="playVideo(${row.id}, '${safeName}')"
+                    const link = `<a href="javascript:void(0);" onclick="playVideo(${row.id}, '${safeName}')"
                                class="text-decoration-none text-primary d-inline-block py-1">
                                 <i class="bi bi-play-circle-fill me-1 text-primary d-md-none"></i>${displayName}
                             </a>`;
+                    if (!row.thumb) return link;
+                    return `<span class="thumb-trigger d-inline-flex align-items-center gap-1"
+                                  data-thumb="/static/${row.thumb}">${link}<span
+                                  class="d-none d-md-inline text-muted thumb-icon"
+                                  title="Ver miniatura">🎞️</span></span>`;
                 }
             },
             { data: 'duration',      className: 'min-tablet' },
@@ -486,3 +511,57 @@ function renderFolderView(targetPath) {
         })
         .join('');
 }
+
+// ── Popup de miniatura al pasar el ratón (sólo dispositivos con hover) ────────
+(function () {
+    if (!window.matchMedia('(hover: hover)').matches) return;
+
+    const popup = document.createElement('div');
+    popup.id = 'thumbPopup';
+    Object.assign(popup.style, {
+        display: 'none', position: 'fixed', zIndex: '9999',
+        pointerEvents: 'none', borderRadius: '10px',
+        boxShadow: '0 6px 24px rgba(0,0,0,.6)', overflow: 'hidden',
+        background: '#000', transition: 'opacity .1s',
+    });
+    const img = document.createElement('img');
+    Object.assign(img.style, { display: 'block', width: '400px', height: 'auto' });
+    popup.appendChild(img);
+    document.body.appendChild(popup);
+
+    let activeTrigger = null;
+
+    document.addEventListener('mouseover', function (e) {
+        const el = e.target.closest('.thumb-trigger');
+        if (!el) {
+            popup.style.display = 'none';
+            activeTrigger = null;
+            return;
+        }
+        if (el === activeTrigger) return;
+        activeTrigger = el;
+        img.src = el.dataset.thumb;
+        popup.style.display = 'block';
+    });
+
+    document.addEventListener('mousemove', function (e) {
+        if (popup.style.display === 'none') return;
+        const offset = 18;
+        const pw = popup.offsetWidth  || 400;
+        const ph = popup.offsetHeight || 225;
+        let x = e.clientX + offset;
+        let y = e.clientY + offset;
+        if (x + pw > window.innerWidth  - 8) x = e.clientX - pw - offset;
+        if (y + ph > window.innerHeight - 8) y = e.clientY - ph - offset;
+        popup.style.left = x + 'px';
+        popup.style.top  = y + 'px';
+    });
+
+    document.addEventListener('mouseout', function (e) {
+        if (!activeTrigger) return;
+        if (!activeTrigger.contains(e.relatedTarget)) {
+            popup.style.display = 'none';
+            activeTrigger = null;
+        }
+    });
+}());
