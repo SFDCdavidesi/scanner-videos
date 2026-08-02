@@ -39,6 +39,8 @@ $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
     if (catFilter     && rowCategory.toLowerCase() !== catFilter)            return false;
     if (dateTextQuery && !rowCaptureDate.toLowerCase().includes(dateTextQuery)) return false;
 
+    if ($('#filterWithThumb').is(':checked') && !rowData.thumb) return false;
+
     if (startDate || endDate) {
         if (!rowCaptureDate || rowCaptureDate === "No disponible") return false;
         const rowDateOnly = rowCaptureDate.substring(0, 10);
@@ -71,8 +73,8 @@ $(document).ready(function () {
     loadStats();
     loadCategoriesDropdown();
 
-    $('#filterLocation, #filterCategory, #filterDateText, #filterStartDate, #filterEndDate')
-        .on('keyup change', () => { if (table) table.draw(); });
+    $('#filterLocation, #filterCategory, #filterDateText, #filterStartDate, #filterEndDate').on('keyup change', () => { if (table) table.draw(); });
+    $('#filterWithThumb').on('change', () => { if (table) table.draw(); });
 
     setInterval(checkStatus, 3000);
 });
@@ -292,6 +294,7 @@ function _fallbackCopy(text) {
 // ── Filtros ───────────────────────────────────────────────────────────────────
 function resetFilters() {
     $('#filterLocation, #filterCategory, #filterDateText, #filterStartDate, #filterEndDate').val('');
+    $('#filterWithThumb').prop('checked', false);
     if (table) table.draw();
 }
 
