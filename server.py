@@ -616,7 +616,7 @@ def needs_transcoding(filepath: str) -> bool:
     try:
         result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=5)
         data = json.loads(result.stdout)
-        web_safe_video = {"h264", "hevc", "vp8", "vp9", "av1"}
+        web_safe_video = {"h264", "vp8", "vp9", "av1"}   # hevc excluido: no universal en navegadores
         web_safe_audio = {"aac", "mp3", "opus", "vorbis"}
         for stream in data.get("streams", []):
             codec = stream.get("codec_name", "").lower()
@@ -626,6 +626,63 @@ def needs_transcoding(filepath: str) -> bool:
         return False
     except Exception:
         return True
+
+def _serve_with_ranges(path: str, request: Request) -> Response:
+    """
+    Sirve un fichero local con soporte completo de Range requests (RFC 7233).
+    iOS Safari y Chrome móvil requieren respuestas 206 Partial Content
+    para poder reproducir vídeo — FileResponse de Starlette no las implementa.
+    """
+    try:
+        file_size = os.path.getsize(path)
+    except OSError:
+        raise HTTPException(status_code=404, detail="Fichero no encontrado.")
+
+    range_header = request.headers.get("range", "")
+    start, end, status_code = 0, file_size - 1, 200
+
+    if range_header:
+        try:
+            parts = range_header.replace("bytes=", "").split("-")
+            start = int(parts[0]) if parts[0] else 0
+            end   = int(parts[1]) if parts[1] else file_size - 1
+            end   = min(end, file_size - 1)
+            status_code = 206
+        except Exception:
+            raise HTTPException(
+                status_code=416,
+                headers={"Content-Range": f"bytes */{file_size}"},
+            )
+        if start > end:
+            raise HTTPException(
+                status_code=416,
+                headers={"Content-Range": f"bytes */{file_size}"},
+            )
+
+    length = end - start + 1
+
+    def _iter():
+        with open(path, "rb") as fh:
+            fh.seek(start)
+            remaining = length
+            while remaining > 0:
+                chunk = fh.read(min(65536, remaining))
+                if not chunk:
+                    break
+                yield chunk
+                remaining -= len(chunk)
+
+    headers: dict[str, str] = {
+        "Accept-Ranges": "bytes",
+        "Content-Length": str(length),
+    }
+    if status_code == 206:
+        headers["Content-Range"] = f"bytes {start}-{end}/{file_size}"
+
+    return StreamingResponse(
+        _iter(), status_code=status_code, headers=headers, media_type="video/mp4"
+    )
+
 
 def ffmpeg_stream_generator(filepath: str):
     cmd = [
@@ -663,27 +720,26 @@ def stream_video(video_id: int, request: Request):
         return FileResponse(path)
 
 @app.get("/share/{video_id}/video.mp4")
-def share_video_whatsapp(video_id: int):
+def share_video_whatsapp(video_id: int, request: Request):
     """
     Endpoint público (sin auth) para compartir por WhatsApp/enlace directo.
-    Sirve siempre un MP4 H.264 + faststart compatible con móvil.
-    La primera petición que requiere transcodificación genera el fichero cacheado;
-    las siguientes se sirven al instante con soporte de Range requests.
+    Sirve MP4 H.264 + faststart con Range request support para iOS Safari.
+    La primera petición que necesita transcodificación genera el fichero cacheado;
+    las siguientes se sirven al instante.
     """
     videos = _load_videos_cached()
     path = next((v.get("path") for v in videos if v.get("id") == video_id), None)
     if not path or not os.path.exists(path):
         raise HTTPException(status_code=404, detail="El vídeo no existe en el disco.")
 
-    # Fichero nativo compatible: servir directamente con Range support
+    # Fichero nativo H.264/AAC en MP4/WebM: servir directamente con Range support
     if not needs_transcoding(path):
-        return FileResponse(path, media_type="video/mp4")
+        return _serve_with_ranges(path, request)
 
-    # Necesita transcodificación: usar caché para evitar re-trabajo y para
-    # que FileResponse pueda ofrecer Range requests (necesario en móvil)
+    # Necesita transcodificación: usar caché con faststart para móvil
     os.makedirs(TRANSCODE_CACHE_DIR, exist_ok=True)
-    cached      = os.path.join(TRANSCODE_CACHE_DIR, f"{video_id}.mp4")
-    cached_tmp  = cached + ".tmp"
+    cached     = os.path.join(TRANSCODE_CACHE_DIR, f"{video_id}.mp4")
+    cached_tmp = cached + ".tmp"
 
     if not os.path.exists(cached):
         # Si otro hilo ya está transcodificando, hacer streaming directo
@@ -696,7 +752,7 @@ def share_video_whatsapp(video_id: int):
             "-c:v", "libx264", "-preset", "ultrafast", "-crf", "23",
             "-pix_fmt", "yuv420p",
             "-c:a", "aac", "-b:a", "128k",
-            "-movflags", "+faststart",   # moov al inicio → reproducción progresiva
+            "-movflags", "+faststart",
             cached_tmp,
         ]
         try:
@@ -707,10 +763,9 @@ def share_video_whatsapp(video_id: int):
                 os.unlink(cached_tmp)
             except OSError:
                 pass
-            # Fallback: streaming si la transcodificación falla
             return StreamingResponse(ffmpeg_stream_generator(path), media_type="video/mp4")
 
-    return FileResponse(cached, media_type="video/mp4")
+    return _serve_with_ranges(cached, request)
 
 if __name__ == "__main__":
     import uvicorn
