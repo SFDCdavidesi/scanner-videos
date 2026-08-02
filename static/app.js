@@ -281,9 +281,16 @@ function loadStats() {
             document.getElementById('statTotalSize').innerText  = (data.total_size_gb      || 0).toLocaleString('es-ES') + ' GB';
             document.getElementById('statTotalHours').innerText = (data.total_duration_hrs || 0).toLocaleString('es-ES') + ' h';
             document.getElementById('statAvgSize').innerText    = (data.avg_size_mb        || 0).toLocaleString('es-ES') + ' MB';
-            document.getElementById('statThumbsCount').innerText = (data.thumbs_count      || 0).toLocaleString('es-ES');
+
+            const total  = data.total_videos  || 0;
+            const thumbs = data.thumbs_count  || 0;
+            const pct    = total > 0 ? Math.round(thumbs / total * 100) : 0;
+            document.getElementById('statThumbsCount').innerText = thumbs.toLocaleString('es-ES');
+            document.getElementById('statThumbsBar').style.width = pct + '%';
+            document.getElementById('statThumbsLabel').textContent =
+                total > 0 ? `${thumbs.toLocaleString('es-ES')} de ${total.toLocaleString('es-ES')} (${pct}%)` : 'Vídeos con Miniatura';
         })
-        .catch(err => console.error("Error al cargar estadísticas", err));
+        .catch(err => console.error('Error al cargar estadísticas', err));
 }
 
 // ── Escaneo ───────────────────────────────────────────────────────────────────
