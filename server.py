@@ -615,7 +615,8 @@ def rename_video(req: RenameRequest, request: Request):
             updated = True
             break
     if updated:
-        save_json(DB_FILE, videos)
+        if not save_json(DB_FILE, videos):
+            raise HTTPException(status_code=500, detail="Error al guardar los cambios en disco.")
         return {"success": True}
     raise HTTPException(status_code=404, detail="Vídeo no encontrado.")
 

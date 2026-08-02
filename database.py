@@ -20,12 +20,13 @@ def load_json(filepath: str, default):
         return default
 
 
-def save_json(filepath: str, data) -> None:
+def save_json(filepath: str, data) -> bool:
     """Escritura atómica mediante fichero temporal único + os.replace.
 
     Usa tempfile.mkstemp para generar un nombre de temporal único en el mismo
     directorio que el destino, evitando la condición de carrera cuando
     media_processor y server escriben concurrentemente sobre el mismo fichero.
+    Devuelve True si el guardado fue exitoso, False en caso de error.
     """
     dir_name = os.path.dirname(os.path.abspath(filepath)) or '.'
     fd, tmp_path = tempfile.mkstemp(dir=dir_name, suffix='.tmp.json')
@@ -33,12 +34,14 @@ def save_json(filepath: str, data) -> None:
         with os.fdopen(fd, 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
         os.replace(tmp_path, filepath)   # atómico en Linux/Synology
+        return True
     except Exception as e:
         log_error("database", str(e))
         try:
             os.unlink(tmp_path)
         except OSError:
             pass
+        return False
 
 
 def log_error(context: str, message: str) -> None:

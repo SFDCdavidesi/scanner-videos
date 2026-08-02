@@ -376,9 +376,15 @@ function renameVideo(id, currentName) {
         headers: { 'Content-Type': 'application/json' },
         body:    JSON.stringify({ id, new_name: newName.trim() })
     })
-    .then(r => { if (!r.ok) throw new Error(); return r.json(); })
-    .then(d => { if (d.success && table) table.ajax.reload(null, false); })
-    .catch(() => alert("Error: no tienes permisos para renombrar vídeos."));
+    .then(r => r.json().then(d => ({ ok: r.ok, status: r.status, body: d })))
+    .then(({ ok, status, body }) => {
+        if (!ok) {
+            alert('Error ' + status + ': ' + (body.detail || 'No se pudo renombrar el vídeo.'));
+            return;
+        }
+        if (body.success && table) table.ajax.reload(null, false);
+    })
+    .catch(err => alert('Error de red al renombrar: ' + err.message));
 }
 
 function deleteVideo(id, name) {
