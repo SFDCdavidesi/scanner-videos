@@ -285,11 +285,20 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         # ── Cabeceras de seguridad ────────────────────────────────────────────
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["X-Frame-Options"] = "SAMEORIGIN"
-        # X-XSS-Protection está obsoleto en navegadores modernos; CSP es la
-        # protección real contra XSS.
+
+        # upgrade-insecure-requests solo cuando la conexión ya es HTTPS
+        # (a través del reverse proxy de Synology). En acceso HTTP directo
+        # interno causaría que el login POST se "upgradee" a https:// y falle.
+        client_host = request.client.host if request.client else ""
+        via_https_proxy = (
+            request.headers.get("x-forwarded-proto", "").split(",")[0].strip() == "https"
+            and _is_trusted_proxy(client_host)
+        )
+        uir_prefix = "upgrade-insecure-requests; " if via_https_proxy else ""
+
         response.headers["Content-Security-Policy"] = (
-            "upgrade-insecure-requests; "
-            "default-src 'self'; "
+            uir_prefix
+            + "default-src 'self'; "
             "script-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdn.datatables.net code.jquery.com; "
             "style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdn.datatables.net; "
             "font-src 'self' cdn.jsdelivr.net; "
