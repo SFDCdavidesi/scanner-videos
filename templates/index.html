@@ -60,7 +60,7 @@
             <li class="nav-item">
                 <button class="nav-link" data-bs-toggle="tab" data-bs-target="#stats-pane" onclick="loadStats()">📊 Estadísticas</button>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" id="errorsTabItem" style="display: none !important;">
                 <button class="nav-link text-danger fw-bold" data-bs-toggle="tab" data-bs-target="#errors-pane" onclick="loadErrorsLog()">
                     <i class="bi bi-exclamation-triangle-fill"></i> Errores (<span id="errorBadgeCount">0</span>)
                 </button>

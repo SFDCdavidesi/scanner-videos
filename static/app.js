@@ -61,6 +61,8 @@ $(document).ready(function () {
                 document.getElementById('currentUserBadge').classList.replace('bg-secondary', 'bg-danger');
                 document.getElementById('adminScanButtons').style.display = 'flex';
                 document.getElementById('btnClearErrors').style.display  = 'inline-block';
+                document.getElementById('errorsTabItem').style.removeProperty('display');
+                loadErrorsLogCount();
             }
 
             _initDataTable();
@@ -73,7 +75,6 @@ $(document).ready(function () {
         .on('keyup change', () => { if (table) table.draw(); });
 
     setInterval(checkStatus, 3000);
-    loadErrorsLogCount();
 });
 
 // ── DataTable ─────────────────────────────────────────────────────────────────
