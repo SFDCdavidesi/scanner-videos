@@ -66,6 +66,19 @@
             /* Required for iOS inline playback */
             -webkit-playsinline: true;
         }
+        .btn-download {
+            display: block;
+            margin: 0.9rem auto 0;
+            width: fit-content;
+            padding: 0.55rem 1.4rem;
+            background: #25d366;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+        .btn-download:hover { background: #1ebe5d; }
         .footer {
             margin-top: 1rem;
             font-size: 0.75rem;
@@ -87,6 +100,9 @@
             <source src="{{ video_src }}" type="video/mp4">
             Tu navegador no soporta la reproducción de vídeo.
         </video>
+        <a class="btn-download" href="/share/{{ video_id }}/download" download="{{ title }}.mp4">
+            ⬇️ Descargar vídeo
+        </a>
         <p class="footer">Compartido desde el explorador de vídeos</p>
     </div>
 </body>

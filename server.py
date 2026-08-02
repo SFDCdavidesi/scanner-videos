@@ -773,6 +773,7 @@ def share_video_page(video_id: int, request: Request):
         "thumb_url":   thumb_url,
         "video_src":   video_src,
         "thumb_src":   thumb_src,
+        "video_id":    video_id,
     })
 
 
@@ -823,6 +824,55 @@ def share_video_whatsapp(video_id: int, request: Request):
             return StreamingResponse(ffmpeg_stream_generator(path), media_type="video/mp4")
 
     return _serve_with_ranges(cached, request)
+
+
+@app.get("/share/{video_id}/download")
+def share_video_download(video_id: int, request: Request):
+    """
+    Descarga forzada (Content-Disposition: attachment) del vídeo compartido.
+    Si el fichero requiere transcodificación usa la caché de /share/.../video.mp4.
+    No requiere autenticación.
+    """
+    videos = _load_videos_cached()
+    video = next((v for v in videos if v.get("id") == video_id), None)
+    if not video:
+        raise HTTPException(status_code=404, detail="Vídeo no encontrado.")
+    path = video.get("path", "")
+    if not path or not os.path.exists(path):
+        raise HTTPException(status_code=404, detail="El vídeo no existe en el disco.")
+
+    filename = os.path.splitext(os.path.basename(path))[0] + ".mp4"
+
+    # Reutiliza la caché de transcodificación si existe
+    cached = os.path.join(TRANSCODE_CACHE_DIR, f"{video_id}.mp4")
+    serve_path = cached if os.path.exists(cached) else path if not needs_transcoding(path) else None
+
+    if serve_path is None:
+        # Transcodificar síncronamente (primera vez, fichero pequeño)
+        os.makedirs(TRANSCODE_CACHE_DIR, exist_ok=True)
+        cached_tmp = cached + ".tmp"
+        if not os.path.exists(cached_tmp):
+            cmd = [
+                "ffmpeg", "-y", "-i", path,
+                "-c:v", "libx264", "-preset", "ultrafast", "-crf", "23",
+                "-pix_fmt", "yuv420p",
+                "-c:a", "aac", "-b:a", "128k",
+                "-movflags", "+faststart",
+                cached_tmp,
+            ]
+            try:
+                subprocess.run(cmd, capture_output=True, timeout=600, check=True)
+                os.replace(cached_tmp, cached)
+            except Exception:
+                try: os.unlink(cached_tmp)
+                except OSError: pass
+                raise HTTPException(status_code=500, detail="Error al preparar el vídeo.")
+        serve_path = cached
+
+    response = _serve_with_ranges(serve_path, request)
+    response.headers["Content-Disposition"] = f'attachment; filename="{filename}"'
+    return response
+
 
 if __name__ == "__main__":
     import uvicorn
