@@ -9,10 +9,11 @@
 const EXCLUDED_FOLDERS = ["/media/volumeUSB3/usbshare3-2"];
 
 // ── Estado global ─────────────────────────────────────────────────────────────
-let table         = null;
+let table          = null;
 let rawFoldersData = [];
-let currentPath   = "";
-let isAdmin       = false;
+let currentPath    = "";
+let isAdmin        = false;
+let viewMode       = 'list';   // 'list' | 'grid'
 
 // ── Filtro personalizado de DataTables ────────────────────────────────────────
 $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
@@ -185,7 +186,12 @@ function _initDataTable() {
                             </div>`;
                 }
             }
-        ]
+        ]  
+    });
+
+    // Re-renderizar cuadrícula cuando los datos cambien
+    table.on('draw', function () {
+        if (viewMode === 'grid') renderGrid();
     });
 }
 
@@ -195,6 +201,48 @@ function _escapeHtml(str) {
 }
 function _escapeName(str) {
     return (str || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+}
+
+// ── Vista cuadrícula ──────────────────────────────────────────────────────────
+function setViewMode(mode) {
+    viewMode = mode;
+    const isList = mode === 'list';
+    document.getElementById('btnListView').classList.toggle('active', isList);
+    document.getElementById('btnGridView').classList.toggle('active', !isList);
+    document.querySelector('.table-responsive').classList.toggle('d-none', !isList);
+    document.getElementById('videosGrid').classList.toggle('d-none', isList);
+    if (!isList) renderGrid();
+}
+
+function renderGrid() {
+    if (!table) return;
+    const container = document.getElementById('videosGrid');
+    const rows = table.rows({ search: 'applied' }).data().toArray()
+        .filter(r => r.thumb);
+
+    if (!rows.length) {
+        container.innerHTML = '<div class="text-center text-muted py-5 fs-5">'
+            + '🎞️ No hay vídeos con miniatura en la selección actual.</div>';
+        return;
+    }
+
+    container.innerHTML = rows.map(r => {
+        const safeName    = _escapeName(r.name);
+        const displayName = _escapeHtml(r.name);
+        const date  = (r.capture_date || '').substring(0, 10) || '—';
+        const size  = parseFloat(r.size_mb)  ? parseFloat(r.size_mb).toFixed(2)  + ' MB' : '—';
+        const dur   = parseFloat(r.duration) ? parseFloat(r.duration).toFixed(2) + ' s'  : '—';
+        const place = r.place_name ? `<br>📍 ${_escapeHtml(r.place_name)}` : '';
+        return `<div class="grid-card" onclick="playVideo(${r.id}, '${safeName}')">
+            <img src="/static/${r.thumb}" alt="${displayName}" loading="lazy">
+            <div class="grid-card-overlay">
+                <div class="grid-card-title">${displayName}</div>
+                <div class="grid-card-meta">
+                    📅 ${date} &nbsp;⋅&nbsp; 💾 ${size} &nbsp;⋅&nbsp; ⏱ ${dur}${place}
+                </div>
+            </div>
+        </div>`;
+    }).join('');
 }
 
 // ── Categorías ────────────────────────────────────────────────────────────────
