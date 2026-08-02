@@ -9,6 +9,8 @@ SYSTEM_DIR_NAMES: frozenset[str] = frozenset({
     "#recycle", "@eaDir", "@appdata", "#snapshot",
     "@docker", "@tmp", "@sharebin", "#ScsiCmdCache",
     "lost+found", ".DS_Store", ".Trash",
+    # Papelera de reciclaje de Windows (discos USB conectados al NAS)
+    "$RECYCLE.BIN", "$RECYCLE", "RECYCLER",
 })
 
 # ─── Prefijos de rutas completas excluidas ────────────────────────────────────
@@ -17,6 +19,10 @@ EXCLUDED_PATH_PREFIXES: tuple[str, ...] = (
     "/volume1/Peliculas",
     "/volume2/Peliculas",
     "/media/volumeUSB3/usbshare3-2",
+    # ContainerManager expone rutas @appdata bajo /media que el filtro de nombre
+    # no siempre alcanza si el punto de montaje oculta el componente @appdata.
+    "/media/volume1/@appdata",
+    "/media/volume2/@appdata",
 )
 
 # ─── Alias de rutas Synology (homes/davidesi ↔ home) ─────────────────────────

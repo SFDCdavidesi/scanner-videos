@@ -87,7 +87,6 @@ def _process_batch(videos: list[dict], pending_indices: list[int]) -> tuple[list
     junto con un flag indicando si hubo cambios.
     """
     changed = False
-    to_purge: set[int] = set()
 
     for idx in pending_indices:
         v = videos[idx]
@@ -97,20 +96,27 @@ def _process_batch(videos: list[dict], pending_indices: list[int]) -> tuple[list
         try:
             size_bytes = os.path.getsize(path)
         except OSError:
-            to_purge.add(idx)
+            # Fichero desaparecido: marcar como irrecuperable (no purgar para evitar
+            # el bucle purga → el scanner lo reindexaría → el geolocator lo vuelve a ver)
+            videos[idx]["geo_failed"] = True
             changed = True
             continue
 
         if size_bytes < MIN_SIZE_BYTES:
-            to_purge.add(idx)
+            videos[idx]["geo_failed"] = True
             changed = True
             continue
 
         # Obtener duración
         duration = _get_duration(path)
         if duration <= 0.0:
-            # Fichero real pero ffprobe no puede leerlo → purgar
-            to_purge.add(idx)
+            # ffprobe no puede leer el fichero: marcar como irrecuperable
+            # NO purgar para no generar el bucle infinito con el scanner
+            videos[idx]["geo_failed"] = True
+            log_error(
+                "geolocator",
+                f"Entrada irrecuperable (ffprobe falla): {path}",
+            )
             changed = True
             continue
 
@@ -123,18 +129,6 @@ def _process_batch(videos: list[dict], pending_indices: list[int]) -> tuple[list
             if place:
                 videos[idx]["place_name"] = place
 
-    # Purgar en orden inverso para no invalidar índices
-    if to_purge:
-        purged_paths = [videos[i].get("path", "?") for i in sorted(to_purge, reverse=True)]
-        for i in sorted(to_purge, reverse=True):
-            del videos[i]
-        log_error(
-            "geolocator",
-            f"Purgadas {len(to_purge)} entradas irrecuperables: "
-            + ", ".join(purged_paths[:5])
-            + ("…" if len(purged_paths) > 5 else ""),
-        )
-
     return videos, changed
 
 
@@ -144,10 +138,11 @@ def main() -> None:
     while True:
         videos: list[dict] = load_json(DB_FILE, [])
 
-        # Índices de entradas que necesitan duración
+        # Índices de entradas que necesitan duración y aún no han fallado definitivamente
         pending: list[int] = [
             i for i, v in enumerate(videos)
             if float(v.get("duration", 0) or 0) <= 0.0
+            and not v.get("geo_failed", False)
             and os.path.exists(v.get("path", ""))
         ]
 
@@ -172,10 +167,11 @@ def main() -> None:
 
             if changed:
                 save_json(DB_FILE, videos)
-                # Recalcular pending tras posibles purgas
+                # Recalcular pending excluyendo entradas ya marcadas como fallidas
                 pending = [
                     i for i, v in enumerate(videos)
                     if float(v.get("duration", 0) or 0) <= 0.0
+                    and not v.get("geo_failed", False)
                     and os.path.exists(v.get("path", ""))
                 ]
 
