@@ -441,7 +441,8 @@ function checkStatus() {
                     Escáner detenido inesperadamente | Pulsa "Retomar" o revisa Errores
                 </span>`;
             } else if (data.is_completed === false) {
-                const files   = data.files_scanned || 0;
+                const files   = data.files_scanned   || 0;
+                const folders = data.folders_scanned || 0;
                 const startTs = data.start_timestamp || 0;
                 let speedText = "", elapsedText = "";
 
@@ -449,7 +450,11 @@ function checkStatus() {
                     const elapsed = Math.floor(Date.now() / 1000 - startTs);
                     if (elapsed > 0) {
                         elapsedText = ` | ⏱️ ${Math.floor(elapsed / 60)}m ${elapsed % 60}s`;
-                        if (files > 0) speedText = ` (${(files / elapsed).toFixed(1)} arch/s)`;
+                        if (files > 0) {
+                            speedText = ` (${(files / elapsed).toFixed(1)} arch/s)`;
+                        } else if (folders > 0) {
+                            speedText = ` | 📂 ${folders.toLocaleString('es-ES')} carpetas (${(folders / elapsed).toFixed(1)}/s)`;
+                        }
                     }
                 }
                 statusEl.innerHTML = `<span class="badge bg-warning text-dark">

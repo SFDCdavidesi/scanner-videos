@@ -124,6 +124,7 @@ def main() -> None:
     scan_roots = [args.path] if args.path else ["/volume1", "/volume2", "/media"]
 
     files_added = 0
+    folders_scanned = 0
     folders_since_flush = 0
 
     # ── Recorrido de directorios ──────────────────────────────────────────────
@@ -144,6 +145,7 @@ def main() -> None:
                 continue
 
             state["last_folder"] = dirpath
+            folders_scanned += 1
             vids_in_folder = 0
 
             for fname in filenames:
@@ -212,14 +214,16 @@ def main() -> None:
             if folders_since_flush >= FLUSH_EVERY_N_FOLDERS:
                 save_json(DB_FILE, videos)
                 save_json(FOLDER_STATS_FILE, folder_stats)
-                state["files_scanned"] = files_added
+                state["files_scanned"]   = files_added
+                state["folders_scanned"] = folders_scanned
                 save_json(STATE_FILE, state)
                 folders_since_flush = 0
 
     # ── Flush final ───────────────────────────────────────────────────────────
     save_json(DB_FILE, videos)
     save_json(FOLDER_STATS_FILE, folder_stats)
-    state["files_scanned"] = files_added
+    state["files_scanned"]   = files_added
+    state["folders_scanned"] = folders_scanned
     state["is_completed"] = True
     state["last_run"] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     save_json(STATE_FILE, state)
