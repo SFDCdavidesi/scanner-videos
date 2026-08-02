@@ -29,6 +29,11 @@ os.makedirs(LOGS_DIR, exist_ok=True)
 # Rutas excluidas del índice (sincronizar con EXCLUDED_PATH_PREFIXES en scanner.py)
 EXCLUDED_FOLDERS: list[str] = ["/media/volumeUSB3/usbshare3-2"]
 
+# Caché de vídeos transcodificados para reproducción móvil
+TRANSCODE_CACHE_DIR = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), "static", "transcoded"
+)
+
 # ─── Rate limiting ────────────────────────────────────────────────────────────
 LOGIN_ATTEMPTS: dict = {}
 MAX_LOGIN_ATTEMPTS = 5
@@ -657,16 +662,53 @@ def stream_video(video_id: int, request: Request):
 
 @app.get("/share/{video_id}/video.mp4")
 def share_video_whatsapp(video_id: int):
-    # Endpoint sin autenticación para compartir por enlace directo (WhatsApp, etc.).
-    # El video_id no es secreto, pero la URL completa sí actúa como token.
+    """
+    Endpoint público (sin auth) para compartir por WhatsApp/enlace directo.
+    Sirve siempre un MP4 H.264 + faststart compatible con móvil.
+    La primera petición que requiere transcodificación genera el fichero cacheado;
+    las siguientes se sirven al instante con soporte de Range requests.
+    """
     videos = _load_videos_cached()
     path = next((v.get("path") for v in videos if v.get("id") == video_id), None)
     if not path or not os.path.exists(path):
         raise HTTPException(status_code=404, detail="El vídeo no existe en el disco.")
-    if needs_transcoding(path):
-        return StreamingResponse(ffmpeg_stream_generator(path), media_type="video/mp4")
-    else:
-        return FileResponse(path)
+
+    # Fichero nativo compatible: servir directamente con Range support
+    if not needs_transcoding(path):
+        return FileResponse(path, media_type="video/mp4")
+
+    # Necesita transcodificación: usar caché para evitar re-trabajo y para
+    # que FileResponse pueda ofrecer Range requests (necesario en móvil)
+    os.makedirs(TRANSCODE_CACHE_DIR, exist_ok=True)
+    cached      = os.path.join(TRANSCODE_CACHE_DIR, f"{video_id}.mp4")
+    cached_tmp  = cached + ".tmp"
+
+    if not os.path.exists(cached):
+        # Si otro hilo ya está transcodificando, hacer streaming directo
+        if os.path.exists(cached_tmp):
+            return StreamingResponse(ffmpeg_stream_generator(path), media_type="video/mp4")
+
+        cmd = [
+            "ffmpeg", "-y",
+            "-i", path,
+            "-c:v", "libx264", "-preset", "ultrafast", "-crf", "23",
+            "-pix_fmt", "yuv420p",
+            "-c:a", "aac", "-b:a", "128k",
+            "-movflags", "+faststart",   # moov al inicio → reproducción progresiva
+            cached_tmp,
+        ]
+        try:
+            subprocess.run(cmd, capture_output=True, timeout=600, check=True)
+            os.replace(cached_tmp, cached)
+        except Exception:
+            try:
+                os.unlink(cached_tmp)
+            except OSError:
+                pass
+            # Fallback: streaming si la transcodificación falla
+            return StreamingResponse(ffmpeg_stream_generator(path), media_type="video/mp4")
+
+    return FileResponse(cached, media_type="video/mp4")
 
 if __name__ == "__main__":
     import uvicorn
