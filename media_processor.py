@@ -7,6 +7,9 @@ Responsabilidades:
      cada vídeo que aún no tenga `thumb`, guardándola en static/thumbs/.
   3. Intentar extraer `place_name` desde metadatos GPS/ISO6709 si están presentes.
   4. Marcar con `geo_failed: true` entradas irrecuperables para no entrar en bucle.
+  5. Deduplicar el listado (sin borrar nada del disco): una vez por ciclo idle,
+     elimina del índice las entradas duplicadas (mismo nombre + mismo tamaño +
+     hash rápido idéntico), conservando la que tiene más metadatos rellenos.
 
 Se ejecuta con baja prioridad vía:  nice -n 19 python media_processor.py
 """
@@ -127,6 +130,95 @@ def _get_thumbnail(filepath: str, duration: float) -> str | None:
     return None
 
 
+def _fast_hash(filepath: str, chunk: int = 1024 * 1024) -> str | None:
+    """
+    Hash rápido (MD5) leyendo solo el primer + último MB del fichero.
+    Suficiente para confirmar que dos ficheros del mismo tamaño son idénticos
+    sin leer gigabytes enteros de vídeo.
+    """
+    hasher = hashlib.md5()
+    try:
+        size = os.path.getsize(filepath)
+        with open(filepath, "rb") as fh:
+            hasher.update(fh.read(chunk))
+            if size > chunk * 2:
+                fh.seek(-chunk, os.SEEK_END)
+                hasher.update(fh.read(chunk))
+        return hasher.hexdigest()
+    except Exception:
+        return None
+
+
+def _metadata_score(v: dict) -> int:
+    """Puntuación de completitud de metadatos (más alto = mejor candidato a conservar)."""
+    return (
+        (1 if float(v.get("duration", 0) or 0) > 0 else 0)
+        + (1 if v.get("thumb") else 0)
+        + (1 if v.get("place_name") else 0)
+        + (1 if v.get("category") else 0)
+    )
+
+
+def _dedup_pass(videos: list[dict]) -> tuple[list[dict], int]:
+    """
+    Elimina del índice entradas duplicadas confirmadas por hash rápido.
+    Regla de conservación: se queda la entrada con más metadatos rellenos;
+    en caso de empate, la de ID más bajo (primera escaneada).
+    No borra nada del disco.
+    Devuelve (lista_limpia, número_de_eliminados).
+    """
+    from collections import defaultdict
+
+    # Fase 1: agrupar candidatos por (nombre, tamaño) — solo en memoria
+    candidates: dict[tuple, list[int]] = defaultdict(list)
+    for idx, v in enumerate(videos):
+        key = (v.get("name", ""), round(float(v.get("size_mb", 0) or 0), 2))
+        if key[0]:  # ignorar entradas sin nombre
+            candidates[key].append(idx)
+
+    ids_to_remove: set[int] = set()
+
+    # Fase 2: solo calcular hash para grupos con más de 1 entrada
+    for key, indices in candidates.items():
+        if len(indices) < 2:
+            continue
+
+        # Agrupar por hash rápido
+        hash_groups: dict[str, list[int]] = defaultdict(list)
+        for idx in indices:
+            path = videos[idx].get("path", "")
+            if path and os.path.exists(path):
+                h = _fast_hash(path)
+                if h:
+                    hash_groups[h].append(idx)
+
+        for h, dup_indices in hash_groups.items():
+            if len(dup_indices) < 2:
+                continue
+            # Ordenar: mejor metadatos primero, luego ID más bajo
+            dup_indices.sort(
+                key=lambda i: (-_metadata_score(videos[i]), videos[i].get("id", 0))
+            )
+            keeper = dup_indices[0]
+            removed_paths = []
+            for idx in dup_indices[1:]:
+                ids_to_remove.add(videos[idx]["id"])
+                removed_paths.append(os.path.basename(videos[idx].get("path", "")))
+            print(
+                f"[media_processor] Duplicado eliminado del índice: "
+                f"{os.path.basename(videos[keeper].get('path',''))} "
+                f"(conservado id={videos[keeper].get('id')}; "
+                f"eliminados: {removed_paths})",
+                flush=True,
+            )
+
+    if not ids_to_remove:
+        return videos, 0
+
+    clean = [v for v in videos if v.get("id") not in ids_to_remove]
+    return clean, len(ids_to_remove)
+
+
 def _process_batch(videos: list[dict], pending_indices: list[int]) -> tuple[list[dict], bool]:
     """
     Procesa un lote de índices: rellena duration, extrae thumb y place_name.
@@ -209,10 +301,19 @@ def main() -> None:
 
         if not pending:
             print(
-                f"[media_processor] Sin trabajo pendiente. Próxima comprobación en "
-                f"{int(SLEEP_IDLE)}s.",
+                f"[media_processor] Sin trabajo pendiente. Ejecutando deduplicación y "
+                f"próxima comprobación en {int(SLEEP_IDLE)}s.",
                 flush=True,
             )
+            # Pase de deduplicación: solo cuando no hay trabajo de metadatos pendiente
+            videos_dedup, removed = _dedup_pass(videos)
+            if removed:
+                save_json(DB_FILE, videos_dedup)
+                print(
+                    f"[media_processor] Deduplicación: {removed} entrada(s) eliminada(s) "
+                    f"del índice (los ficheros físicos NO se han borrado).",
+                    flush=True,
+                )
             time.sleep(SLEEP_IDLE)
             continue
 
