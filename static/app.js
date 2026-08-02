@@ -131,8 +131,8 @@ function _initDataTable() {
                                   title="Ver miniatura">🎞️</span></span>`;
                 }
             },
-            { data: 'duration',      className: 'min-tablet' },
-            { data: 'size_mb',       className: 'desktop' },
+            { data: 'duration',      className: 'min-tablet', render(data) { const v = parseFloat(data); return isNaN(v) ? data : v.toFixed(2); } },
+            { data: 'size_mb',       className: 'desktop',    render(data) { const v = parseFloat(data); return isNaN(v) ? data : v.toFixed(2); } },
             { data: 'capture_date',  className: 'all' },
             { data: 'file_date',     className: 'desktop' },
             {
