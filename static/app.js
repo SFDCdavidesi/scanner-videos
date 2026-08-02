@@ -1,0 +1,487 @@
+/* =============================================================================
+   app.js — Lógica principal del Explorador Web NAS
+   Depende de: jQuery, Bootstrap 5, DataTables + responsive
+   ============================================================================= */
+
+'use strict';
+
+// ── Configuración ─────────────────────────────────────────────────────────────
+const EXCLUDED_FOLDERS = ["/media/volumeUSB3/usbshare3-2"];
+
+// ── Estado global ─────────────────────────────────────────────────────────────
+let table         = null;
+let rawFoldersData = [];
+let currentPath   = "";
+let isAdmin       = false;
+
+// ── Filtro personalizado de DataTables ────────────────────────────────────────
+$.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+    if (settings.nTable.id !== 'videosTable') return true;
+
+    const rowData    = settings.aoData[dataIndex]._aData || {};
+    const rowPath    = rowData.path || "";
+
+    for (let i = 0; i < EXCLUDED_FOLDERS.length; i++) {
+        if (rowPath.startsWith(EXCLUDED_FOLDERS[i])) return false;
+    }
+
+    const locFilter     = $('#filterLocation').val().toLowerCase();
+    const catFilter     = $('#filterCategory').val().toLowerCase();
+    const dateTextQuery = $('#filterDateText').val().toLowerCase().trim();
+    const startDate     = $('#filterStartDate').val();
+    const endDate       = $('#filterEndDate').val();
+
+    const rowCaptureDate = rowData.capture_date || "";
+    const rowLocation    = rowData.place_name   || "";
+    const rowCategory    = rowData.category     || "";
+
+    if (locFilter     && !rowLocation.toLowerCase().includes(locFilter))    return false;
+    if (catFilter     && rowCategory.toLowerCase() !== catFilter)            return false;
+    if (dateTextQuery && !rowCaptureDate.toLowerCase().includes(dateTextQuery)) return false;
+
+    if (startDate || endDate) {
+        if (!rowCaptureDate || rowCaptureDate === "No disponible") return false;
+        const rowDateOnly = rowCaptureDate.substring(0, 10);
+        if (startDate && rowDateOnly < startDate) return false;
+        if (endDate   && rowDateOnly > endDate)   return false;
+    }
+    return true;
+});
+
+// ── Inicialización ────────────────────────────────────────────────────────────
+$(document).ready(function () {
+    // Cargar info de usuario antes de montar la tabla
+    fetch('/api/user_info')
+        .then(r => r.json())
+        .then(userInfo => {
+            isAdmin = userInfo.is_admin;
+            document.getElementById('currentUsername').textContent = userInfo.username || '?';
+
+            if (isAdmin) {
+                document.getElementById('currentUserBadge').classList.replace('bg-secondary', 'bg-danger');
+                document.getElementById('adminScanButtons').style.display = 'flex';
+                document.getElementById('btnClearErrors').style.display  = 'inline-block';
+            }
+
+            _initDataTable();
+        });
+
+    loadStats();
+    loadCategoriesDropdown();
+
+    $('#filterLocation, #filterCategory, #filterDateText, #filterStartDate, #filterEndDate')
+        .on('keyup change', () => { if (table) table.draw(); });
+
+    setInterval(checkStatus, 3000);
+    loadErrorsLogCount();
+});
+
+// ── DataTable ─────────────────────────────────────────────────────────────────
+function _initDataTable() {
+    table = $('#videosTable').DataTable({
+        ajax:        { url: '/api/videos', dataSrc: '' },
+        deferRender: true,
+        language:    { url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json' },
+        responsive:  true,
+        columns: [
+            {
+                data: 'name',
+                className: 'fw-bold all',
+                render(data, type, row) {
+                    const safeName    = _escapeName(row.name);
+                    const displayName = _escapeHtml(row.name);
+                    return `<a href="javascript:void(0);" onclick="playVideo(${row.id}, '${safeName}')"
+                               class="text-decoration-none text-primary d-inline-block py-1">
+                                <i class="bi bi-play-circle-fill me-1 text-primary d-md-none"></i>${displayName}
+                            </a>`;
+                }
+            },
+            { data: 'duration',      className: 'min-tablet' },
+            { data: 'size_mb',       className: 'desktop' },
+            { data: 'capture_date',  className: 'all' },
+            { data: 'file_date',     className: 'desktop' },
+            {
+                data: 'place_name',
+                className: 'all',
+                render(data) {
+                    if (!data) return '<span class="text-muted small">Desconocida</span>';
+                    return `<span class="badge bg-info text-dark"><i class="bi bi-geo-alt-fill"></i> ${data}</span>`;
+                }
+            },
+            { data: 'path', className: 'none' },
+            {
+                data: 'category',
+                className: 'all',
+                render(data) {
+                    if (!data) return '<span class="text-muted small">Sin categoría</span>';
+                    return `<span class="badge bg-secondary"><i class="bi bi-tag-fill"></i> ${data}</span>`;
+                }
+            },
+            {
+                data: null,
+                className: 'all text-end',
+                render(data, type, row) {
+                    const safeName  = _escapeName(row.name);
+                    const safeCat   = (row.category || '').replace(/'/g, "\\'");
+                    const adminBtns = isAdmin ? `
+                        <button class="btn btn-sm btn-outline-warning" title="Asignar categoría"
+                                onclick="editCategory(${row.id}, '${safeCat}')">
+                            <i class="bi bi-tag"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-secondary"
+                                onclick="renameVideo(${row.id}, '${safeName}')">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger"
+                                onclick="deleteVideo(${row.id}, '${safeName}')">
+                            <i class="bi bi-trash"></i>
+                        </button>` : '';
+
+                    return `<div class="d-flex justify-content-end gap-1">
+                                ${adminBtns}
+                                <button class="btn btn-sm btn-success" title="Copiar enlace WhatsApp"
+                                        onclick="copyDirectLink(${row.id})">
+                                    <i class="bi bi-whatsapp"></i>
+                                </button>
+                                <button class="btn btn-sm btn-primary" title="Reproducir"
+                                        onclick="playVideo(${row.id}, '${safeName}')">
+                                    <i class="bi bi-play-fill"></i>
+                                </button>
+                            </div>`;
+                }
+            }
+        ]
+    });
+}
+
+// ── Helpers de escape ─────────────────────────────────────────────────────────
+function _escapeHtml(str) {
+    return (str || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+function _escapeName(str) {
+    return (str || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+}
+
+// ── Categorías ────────────────────────────────────────────────────────────────
+function loadCategoriesDropdown() {
+    fetch('/api/categories')
+        .then(r => r.json())
+        .then(cats => {
+            const select   = $('#filterCategory');
+            const currentVal = select.val();
+            select.html('<option value="">Todas las categorías...</option>');
+            cats.forEach(c => select.append(`<option value="${c}">${c}</option>`));
+            if (currentVal) select.val(currentVal);
+        });
+}
+
+function editCategory(id, currentCat) {
+    if (!isAdmin) return alert("Acción restringida al administrador.");
+    const newCat = prompt("Categoría para este vídeo (vacío para eliminarla):", currentCat);
+    if (newCat === null) return;
+    fetch('/api/videos/category', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ id, category: newCat.trim() })
+    })
+    .then(r => { if (!r.ok) throw new Error(); return r.json(); })
+    .then(d => { if (d.success) { table.ajax.reload(null, false); loadCategoriesDropdown(); } })
+    .catch(() => alert("Error: no tienes permisos para esta acción."));
+}
+
+// ── Estadísticas ──────────────────────────────────────────────────────────────
+function loadStats() {
+    fetch('/api/dashboard_stats')
+        .then(r => { if (!r.ok) throw new Error(); return r.json(); })
+        .then(data => {
+            document.getElementById('statTotalVids').innerText  = (data.total_videos       || 0).toLocaleString('es-ES');
+            document.getElementById('statTotalSize').innerText  = (data.total_size_gb      || 0).toLocaleString('es-ES') + ' GB';
+            document.getElementById('statTotalHours').innerText = (data.total_duration_hrs || 0).toLocaleString('es-ES') + ' h';
+            document.getElementById('statAvgSize').innerText    = (data.avg_size_mb        || 0).toLocaleString('es-ES') + ' MB';
+        })
+        .catch(err => console.error("Error al cargar estadísticas", err));
+}
+
+// ── Escaneo ───────────────────────────────────────────────────────────────────
+function triggerScan(resume, path = null) {
+    if (!isAdmin) return alert("Acción restringida al administrador.");
+    fetch('/api/scan', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ resume, clean_first: !resume, path })
+    })
+    .then(r => { if (!r.ok) throw new Error(); return r.json(); })
+    .then(() => checkStatus())
+    .catch(() => alert("Error: no tienes permisos para iniciar escaneos."));
+}
+
+function stopScan() {
+    if (!isAdmin) return alert("Acción restringida al administrador.");
+    fetch('/api/scan/stop', { method: 'POST' })
+        .then(r => { if (!r.ok) throw new Error(); return r.json(); })
+        .then(() => checkStatus())
+        .catch(() => alert("Error al cancelar el escaneo."));
+}
+
+function scanSpecificFolder(folderPath) {
+    if (!isAdmin) return alert("Acción restringida al administrador.");
+    if (confirm(`¿Escanear únicamente:\n${folderPath}?`)) {
+        triggerScan(false, folderPath);
+        alert("Escaneo específico iniciado.");
+    }
+}
+
+// ── Enlace directo (WhatsApp) ─────────────────────────────────────────────────
+function copyDirectLink(id) {
+    const { protocol, hostname, port } = window.location;
+    const isLocal = hostname.startsWith("192.168.") || hostname === "localhost" || hostname === "127.0.0.1";
+    const base    = protocol + "//" + hostname + (isLocal && port ? ":" + port : "");
+    const url     = `${base}/share/${id}/video.mp4`;
+
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(url)
+            .then(() => alert("✅ ¡Enlace copiado!\n🔗 " + url))
+            .catch(() => _fallbackCopy(url));
+    } else {
+        _fallbackCopy(url);
+    }
+}
+
+function _fallbackCopy(text) {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    document.body.appendChild(ta);
+    ta.focus(); ta.select();
+    try {
+        document.execCommand('copy')
+            ? alert("✅ ¡Enlace copiado!\n🔗 " + text)
+            : alert("⚠️ Cópialo manualmente:\n\n" + text);
+    } catch {
+        alert("⚠️ Error. Cópialo manualmente:\n\n" + text);
+    }
+    document.body.removeChild(ta);
+}
+
+// ── Filtros ───────────────────────────────────────────────────────────────────
+function resetFilters() {
+    $('#filterLocation, #filterCategory, #filterDateText, #filterStartDate, #filterEndDate').val('');
+    if (table) table.draw();
+}
+
+// ── CRUD de vídeos ────────────────────────────────────────────────────────────
+function renameVideo(id, currentName) {
+    if (!isAdmin) return alert("Acción restringida al administrador.");
+    const newName = prompt("Nuevo nombre:", currentName);
+    if (!newName || !newName.trim() || newName === currentName) return;
+    fetch('/api/videos/rename', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ id, new_name: newName.trim() })
+    })
+    .then(r => { if (!r.ok) throw new Error(); return r.json(); })
+    .then(d => { if (d.success && table) table.ajax.reload(null, false); })
+    .catch(() => alert("Error: no tienes permisos para renombrar vídeos."));
+}
+
+function deleteVideo(id, name) {
+    if (!isAdmin) return alert("Acción restringida al administrador.");
+    if (!confirm(`¿Eliminar "${name}" de la web?`)) return;
+    fetch('/api/videos/delete', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ id })
+    })
+    .then(r => { if (!r.ok) throw new Error(); return r.json(); })
+    .then(d => { if (d.success && table) table.ajax.reload(null, false); })
+    .catch(() => alert("Error: no tienes permisos para eliminar vídeos."));
+}
+
+// ── Reproductor ───────────────────────────────────────────────────────────────
+function playVideo(id, safeName) {
+    document.getElementById('videoModalTitle').innerText = safeName;
+    const player   = document.getElementById('webVideoPlayer');
+    const alertBox = document.getElementById('videoErrorAlert');
+
+    alertBox.classList.add('d-none');
+    player.style.display = 'block';
+    player.onerror = () => { alertBox.classList.remove('d-none'); player.style.display = 'none'; };
+    player.src = `/api/stream?video_id=${id}`;
+
+    new bootstrap.Modal(document.getElementById('videoModal')).show();
+}
+
+function stopVideo() {
+    const player = document.getElementById('webVideoPlayer');
+    player.pause();
+    player.src = "";
+    document.getElementById('videoErrorAlert').classList.add('d-none');
+    player.style.display = 'block';
+}
+
+// ── Estado del escáner ────────────────────────────────────────────────────────
+function checkStatus() {
+    fetch('/api/status')
+        .then(r => r.json())
+        .then(data => {
+            const statusEl  = document.getElementById('statusText');
+            const cancelBtn = document.getElementById('btnCancelScan');
+
+            if (cancelBtn && isAdmin) {
+                cancelBtn.style.display = data.is_completed === false ? 'inline-block' : 'none';
+            }
+
+            if (!statusEl) return;
+
+            if (data.is_completed === "ZOMBIE") {
+                statusEl.innerHTML = `<span class="badge bg-danger">
+                    <i class="bi bi-x-circle-fill"></i>
+                    Escáner detenido inesperadamente | Pulsa "Retomar" o revisa Errores
+                </span>`;
+            } else if (data.is_completed === false) {
+                const files   = data.files_scanned || 0;
+                const startTs = data.start_timestamp || 0;
+                let speedText = "", elapsedText = "";
+
+                if (startTs > 0) {
+                    const elapsed = Math.floor(Date.now() / 1000 - startTs);
+                    if (elapsed > 0) {
+                        elapsedText = ` | ⏱️ ${Math.floor(elapsed / 60)}m ${elapsed % 60}s`;
+                        if (files > 0) speedText = ` (${(files / elapsed).toFixed(1)} arch/s)`;
+                    }
+                }
+                statusEl.innerHTML = `<span class="badge bg-warning text-dark">
+                    <span class="spinner-border spinner-border-sm me-1"></span>
+                    Escaneando... | 📁 Ficheros: <strong>${files}</strong>${speedText}${elapsedText}
+                    | 📍 ${data.last_folder || 'Iniciando...'}
+                </span>`;
+                if (table) table.ajax.reload(null, false);
+            } else {
+                statusEl.innerHTML = `<span class="badge bg-success">
+                    Completado | Último escaneo: ${data.last_run || 'N/A'}
+                </span>`;
+            }
+        });
+    loadErrorsLogCount();
+}
+
+// ── Errores ───────────────────────────────────────────────────────────────────
+function loadErrorsLogCount() {
+    fetch('/api/errors')
+        .then(r => r.json())
+        .then(data => { document.getElementById('errorBadgeCount').innerText = data.length || 0; });
+}
+
+function loadErrorsLog() {
+    fetch('/api/errors')
+        .then(r => r.json())
+        .then(data => {
+            const container = document.getElementById('errorsListContainer');
+            document.getElementById('errorBadgeCount').innerText = data.length || 0;
+
+            if (!data || data.length === 0) {
+                container.innerHTML = '<div class="p-4 text-center text-muted">No hay errores registrados.</div>';
+                return;
+            }
+            container.innerHTML = data.map(err =>
+                `<div class="p-2 border-bottom text-danger font-monospace small">
+                    <strong>[${err.context}]</strong> ${err.timestamp}: ${err.message}
+                 </div>`
+            ).join('');
+        });
+}
+
+function clearErrorsLog() {
+    if (!isAdmin) return alert("Acción restringida al administrador.");
+    fetch('/api/errors/clear', { method: 'POST' })
+        .then(r => { if (!r.ok) throw new Error(); loadErrorsLog(); })
+        .catch(() => alert("Error: no tienes permisos para limpiar los errores."));
+}
+
+// ── Explorador de carpetas ────────────────────────────────────────────────────
+function initFolderExplorer() {
+    fetch('/api/folders')
+        .then(r => r.json())
+        .then(data => {
+            rawFoldersData = data.filter(f =>
+                !EXCLUDED_FOLDERS.some(exc => f.path.startsWith(exc))
+            );
+            currentPath = "";
+            renderFolderView("");
+        });
+}
+
+function renderFolderView(targetPath) {
+    currentPath = targetPath;
+    const container = document.getElementById('foldersListContainer');
+
+    // Breadcrumb
+    let breadcrumbHtml = `<li class="breadcrumb-item"><a onclick="renderFolderView('')">Raíz</a></li>`;
+    if (targetPath) {
+        let accumulated = "";
+        targetPath.split('/').filter(p => p).forEach((part, index, parts) => {
+            accumulated += "/" + part;
+            breadcrumbHtml += index === parts.length - 1
+                ? `<li class="breadcrumb-item active">${part}</li>`
+                : `<li class="breadcrumb-item"><a onclick="renderFolderView('${accumulated}')">${part}</a></li>`;
+        });
+    }
+    document.getElementById('folderBreadcrumbs').innerHTML = breadcrumbHtml;
+
+    // Hijos directos
+    let children = [];
+    if (targetPath === "") {
+        const rootsMap = {};
+        rawFoldersData.forEach(f => {
+            const parts = f.path.split('/').filter(p => p);
+            if (parts.length >= 2) {
+                const rootPath = "/" + parts[0] + "/" + parts[1];
+                if (!rootsMap[rootPath]) {
+                    rootsMap[rootPath] = { path: rootPath, total_files: 0, videos_found: 0, scanned_at: f.scanned_at };
+                }
+                rootsMap[rootPath].total_files   += (f.total_files   || 0);
+                rootsMap[rootPath].videos_found  += (f.videos_found  || 0);
+            }
+        });
+        children = Object.values(rootsMap);
+    } else {
+        const depth = targetPath.split('/').filter(p => p).length;
+        rawFoldersData.forEach(f => {
+            if (f.path.startsWith(targetPath + "/") && f.path !== targetPath &&
+                f.path.split('/').filter(p => p).length === depth + 1) {
+                children.push(f);
+            }
+        });
+    }
+
+    if (children.length === 0) {
+        container.innerHTML = '<div class="p-4 text-center text-muted">No hay subcarpetas registradas.</div>';
+        return;
+    }
+
+    const scanBtn = (path) => isAdmin
+        ? `<button class="btn btn-sm btn-outline-primary" title="Escanear solo esta carpeta"
+                   onclick="scanSpecificFolder('${path}')">
+               <i class="bi bi-arrow-clockwise"></i> Escanear
+           </button>`
+        : '';
+
+    container.innerHTML = children
+        .sort((a, b) => a.path.localeCompare(b.path))
+        .map(folder => {
+            const name = folder.path.split('/').pop();
+            return `<div class="folder-item">
+                        <div style="cursor:pointer;flex-grow:1;" onclick="renderFolderView('${folder.path}')">
+                            <i class="bi bi-folder-fill text-warning me-2 fs-5"></i>
+                            <strong>${name}</strong><br>
+                            <small class="text-muted ms-4" style="font-size:0.75rem;">${folder.path}</small>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="badge bg-secondary">Ficheros: ${folder.total_files || 0}</span>
+                            <span class="badge bg-success">Vídeos: ${folder.videos_found || 0}</span>
+                            ${scanBtn(folder.path)}
+                        </div>
+                    </div>`;
+        })
+        .join('');
+}

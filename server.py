@@ -13,6 +13,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request, HTTPException, Depends, status, Form
 from fastapi.responses import HTMLResponse, FileResponse, StreamingResponse, Response, RedirectResponse
+from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.base import BaseHTTPMiddleware
 from pydantic import BaseModel
@@ -376,6 +377,7 @@ async def lifespan(app: FastAPI):
         except: pass
 
 app = FastAPI(title="Explorador Web NAS", lifespan=lifespan)
+app.mount("/static", StaticFiles(directory="static"), name="static")
 app.add_middleware(SecurityHeadersMiddleware)
 
 @app.get("/favicon.ico", include_in_schema=False)

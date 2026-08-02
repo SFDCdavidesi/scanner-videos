@@ -5,44 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <title>Explorador de Vídeos y NAS</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>">
-    
+
+    <!-- CDN: Bootstrap + DataTables + Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-    
-    <style>
-        body { background-color: #f4f6f9; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
-        .card-panel { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        .folder-item { padding: 12px 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; transition: background 0.2s; }
-        .folder-item:hover { background-color: #f8f9fa; }
-        .breadcrumb-item a { text-decoration: none; cursor: pointer; }
 
-        @media (max-width: 768px) {
-            body { padding: 10px; }
-            .card-panel { padding: 15px; }
-            h3 { font-size: 1.25rem; }
-            #statusText { display: block; margin-top: 8px; font-size: 0.8rem; }
-            .nav-tabs .nav-link { font-size: 0.82rem; padding: 0.45rem 0.6rem; }
-            .mobile-stack-buttons { display: flex; flex-direction: column; gap: 8px; width: 100%; margin-top: 12px; }
-            .mobile-stack-buttons .btn { width: 100%; }
-            table.dataTable.dtr-inline.collapsed > tbody > tr > td.dtr-control:before { background-color: #0d6efd; }
-        }
-    </style>
+    <!-- Estilos propios -->
+    <link rel="stylesheet" href="/static/app.css">
 </head>
 <body>
     <div class="container-fluid p-0">
+
+        <!-- ── Cabecera ──────────────────────────────────────────────────── -->
         <div class="card-panel d-flex flex-column flex-md-row justify-content-between align-items-md-center">
             <div>
                 <h3 class="m-0"><i class="bi bi-collection-play-fill text-primary"></i> Explorador Web NAS</h3>
                 <small id="statusText" class="text-muted">Estado del escáner: Comprobando...</small>
             </div>
             <div class="d-flex align-items-center gap-2 flex-wrap mt-2 mt-md-0">
-                <!-- Controles de escaneo exclusivos para Admin -->
+                <!-- Controles de escaneo (solo admin) -->
                 <div class="d-flex gap-2 mobile-stack-buttons" id="adminScanButtons" style="display: none !important;">
-                    <button class="btn btn-outline-secondary btn-sm" onclick="triggerScan(true)"><i class="bi bi-play-circle"></i> Retomar</button>
-                    <button class="btn btn-outline-danger btn-sm" id="btnCancelScan" style="display: none;" onclick="stopScan()"><i class="bi bi-stop-circle"></i> Cancelar</button>
-                    <button class="btn btn-outline-primary btn-sm" onclick="triggerScan(false)"><i class="bi bi-arrow-clockwise"></i> Reiniciar Escaneo</button>
+                    <button class="btn btn-outline-secondary btn-sm" onclick="triggerScan(true)">
+                        <i class="bi bi-play-circle"></i> Retomar
+                    </button>
+                    <button class="btn btn-outline-danger btn-sm" id="btnCancelScan" style="display: none;" onclick="stopScan()">
+                        <i class="bi bi-stop-circle"></i> Cancelar
+                    </button>
+                    <button class="btn btn-outline-primary btn-sm" onclick="triggerScan(false)">
+                        <i class="bi bi-arrow-clockwise"></i> Reiniciar Escaneo
+                    </button>
                 </div>
                 <!-- Usuario activo + Cerrar Sesión -->
                 <div class="d-flex align-items-center gap-2">
@@ -56,14 +49,26 @@
             </div>
         </div>
 
+        <!-- ── Pestañas principales ───────────────────────────────────────── -->
         <ul class="nav nav-tabs mb-3 flex-nowrap overflow-auto" id="mainTab" role="tablist" style="white-space: nowrap;">
-            <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#videos-pane">🎬 Vídeos</button></li>
-            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#folders-pane" onclick="initFolderExplorer()">📁 Carpetas</button></li>
-            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#stats-pane" onclick="loadStats()">📊 Estadísticas</button></li>
-            <li class="nav-item"><button class="nav-link text-danger fw-bold" data-bs-toggle="tab" data-bs-target="#errors-pane" onclick="loadErrorsLog()"><i class="bi bi-exclamation-triangle-fill"></i> Errores (<span id="errorBadgeCount">0</span>)</button></li>
+            <li class="nav-item">
+                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#videos-pane">🎬 Vídeos</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#folders-pane" onclick="initFolderExplorer()">📁 Carpetas</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#stats-pane" onclick="loadStats()">📊 Estadísticas</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link text-danger fw-bold" data-bs-toggle="tab" data-bs-target="#errors-pane" onclick="loadErrorsLog()">
+                    <i class="bi bi-exclamation-triangle-fill"></i> Errores (<span id="errorBadgeCount">0</span>)
+                </button>
+            </li>
         </ul>
 
         <div class="tab-content">
+            <!-- ── Tab: Vídeos ────────────────────────────────────────────── -->
             <div class="tab-pane fade show active card-panel" id="videos-pane">
                 <div class="row g-2 mb-3">
                     <div class="col-md-3">
@@ -85,9 +90,10 @@
                     </div>
                 </div>
                 <div class="mb-3">
-                    <button class="btn btn-outline-secondary btn-sm" onclick="resetFilters()"><i class="bi bi-x-circle"></i> Limpiar Filtros</button>
+                    <button class="btn btn-outline-secondary btn-sm" onclick="resetFilters()">
+                        <i class="bi bi-x-circle"></i> Limpiar Filtros
+                    </button>
                 </div>
-
                 <div class="table-responsive">
                     <table id="videosTable" class="table table-striped table-hover align-middle w-100">
                         <thead>
@@ -107,7 +113,8 @@
                     </table>
                 </div>
             </div>
-            
+
+            <!-- ── Tab: Carpetas ──────────────────────────────────────────── -->
             <div class="tab-pane fade card-panel" id="folders-pane">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <nav aria-label="breadcrumb">
@@ -118,7 +125,8 @@
                 </div>
                 <div id="foldersListContainer" class="border rounded bg-white"></div>
             </div>
-            
+
+            <!-- ── Tab: Estadísticas ──────────────────────────────────────── -->
             <div class="tab-pane fade card-panel" id="stats-pane">
                 <h4 class="mb-4 text-primary"><i class="bi bi-bar-chart-fill"></i> Estadísticas Globales del NAS</h4>
                 <div class="row text-center">
@@ -153,17 +161,20 @@
                 </div>
             </div>
 
+            <!-- ── Tab: Errores ───────────────────────────────────────────── -->
             <div class="tab-pane fade card-panel" id="errors-pane">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="m-0 text-danger"><i class="bi bi-exclamation-triangle-fill"></i> Registro de Errores</h5>
-                    <button class="btn btn-sm btn-outline-danger" id="btnClearErrors" style="display: none;" onclick="clearErrorsLog()"><i class="bi bi-trash"></i> Limpiar Errores</button>
+                    <button class="btn btn-sm btn-outline-danger" id="btnClearErrors" style="display: none;" onclick="clearErrorsLog()">
+                        <i class="bi bi-trash"></i> Limpiar Errores
+                    </button>
                 </div>
                 <div id="errorsListContainer" class="border rounded bg-white p-2" style="max-height: 400px; overflow-y: auto;"></div>
             </div>
         </div>
     </div>
 
-    <!-- Modal de Reproducción -->
+    <!-- ── Modal: Reproductor de vídeo ───────────────────────────────────── -->
     <div class="modal fade" id="videoModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
@@ -172,459 +183,24 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="stopVideo()"></button>
                 </div>
                 <div class="modal-body bg-black text-center p-0">
-                    <video id="webVideoPlayer" controls autoplay style="width: 100%; max-height: 80vh; display: block;"></video>
-                    <div id="videoErrorAlert" class="alert alert-danger m-3 d-none">No se puede reproducir este vídeo directamente o el códec no está soportado.</div>
+                    <video id="webVideoPlayer" controls autoplay></video>
+                    <div id="videoErrorAlert" class="alert alert-danger m-3 d-none">
+                        No se puede reproducir este vídeo o el códec no está soportado.
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- CDN: jQuery + Bootstrap JS + DataTables -->
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
-    
-    <script>
-        const EXCLUDED_FOLDERS = ["/media/volumeUSB3/usbshare3-2"];
 
-        let table;
-        let rawFoldersData = [];
-        let currentPath = "";
-        let isAdmin = false;
-
-        $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-            if (settings.nTable.id !== 'videosTable') return true;
-            
-            let rowData = settings.aoData[dataIndex]._aData || {};
-            let rowPath = rowData.path || ""; 
-            
-            for (let i = 0; i < EXCLUDED_FOLDERS.length; i++) {
-                if (rowPath.startsWith(EXCLUDED_FOLDERS[i])) return false;
-            }
-
-            let locFilter = $('#filterLocation').val().toLowerCase();
-            let catFilter = $('#filterCategory').val().toLowerCase();
-            let dateTextQuery = $('#filterDateText').val().toLowerCase().trim();
-            let startDate = $('#filterStartDate').val();
-            let endDate = $('#filterEndDate').val();
-            
-            let rowCaptureDate = rowData.capture_date || "";
-            let rowLocation = rowData.place_name || "";
-            let rowCategory = rowData.category || "";
-
-            if (locFilter && rowLocation.toLowerCase().indexOf(locFilter) === -1) return false;
-            if (catFilter && rowCategory.toLowerCase() !== catFilter) return false;
-            if (dateTextQuery && rowCaptureDate.toLowerCase().indexOf(dateTextQuery) === -1) return false;
-            if (startDate || endDate) {
-                if (!rowCaptureDate || rowCaptureDate === "No disponible") return false;
-                let rowDateOnly = rowCaptureDate.substring(0, 10);
-                if (startDate && rowDateOnly < startDate) return false;
-                if (endDate && rowDateOnly > endDate) return false;
-            }
-            return true;
-        });
-
-        $(document).ready(function() {
-            fetch('/api/user_info')
-            .then(r => r.json())
-            .then(userInfo => {
-                isAdmin = userInfo.is_admin;
-                document.getElementById('currentUsername').textContent = userInfo.username || '?';
-                if (isAdmin) {
-                    document.getElementById('currentUserBadge').classList.replace('bg-secondary', 'bg-danger');
-                    document.getElementById('adminScanButtons').style.display = 'flex';
-                    document.getElementById('btnClearErrors').style.display = 'inline-block';
-                }
-
-                table = $('#videosTable').DataTable({
-                    ajax: { url: '/api/videos', dataSrc: '' },
-                    deferRender: true,
-                    language: { url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json' },
-                    responsive: true,
-                    columns: [
-                        { 
-                            data: 'name', 
-                            className: 'fw-bold all',
-                            render: function(data, type, row) {
-                                const safeName = (row.name || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
-                                const displayName = (row.name || '').replace(/</g, "&lt;").replace(/>/g, "&gt;");
-                                return `<a href="javascript:void(0);" onclick="playVideo(${row.id}, '${safeName}')" class="text-decoration-none text-primary d-inline-block py-1"><i class="bi bi-play-circle-fill me-1 text-primary d-md-none"></i>${displayName}</a>`;
-                            }
-                        },
-                        { data: 'duration', className: 'min-tablet' },
-                        { data: 'size_mb', className: 'desktop' },
-                        { data: 'capture_date', className: 'all' },
-                        { data: 'file_date', className: 'desktop' },
-                        { 
-                            data: 'place_name',
-                            className: 'all',
-                            render: function(data, type, row) {
-                                if (!data) return '<span class="text-muted small">Desconocida</span>';
-                                return `<span class="badge bg-info text-dark"><i class="bi bi-geo-alt-fill"></i> ${data}</span>`;
-                            }
-                        },
-                        { data: 'path', className: 'none' },
-                        { 
-                            data: 'category',
-                            className: 'all',
-                            render: function(data, type, row) {
-                                if (!data) return '<span class="text-muted small">Sin categoría</span>';
-                                return `<span class="badge bg-secondary"><i class="bi bi-tag-fill"></i> ${data}</span>`;
-                            }
-                        },
-                        {
-                            data: null,
-                            className: 'all text-end',
-                            render: function(data, type, row) {
-                                const safeName = (row.name || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
-                                const currentCat = (row.category || '').replace(/'/g, "\\'");
-                                
-                                let adminActions = '';
-                                if (isAdmin) {
-                                    adminActions = `
-                                        <button class="btn btn-sm btn-outline-warning" title="Asignar categoría" onclick="editCategory(${row.id}, '${currentCat}')"><i class="bi bi-tag"></i></button>
-                                        <button class="btn btn-sm btn-outline-secondary" onclick="renameVideo(${row.id}, '${safeName}')"><i class="bi bi-pencil"></i></button>
-                                        <button class="btn btn-sm btn-outline-danger" onclick="deleteVideo(${row.id}, '${safeName}')"><i class="bi bi-trash"></i></button>
-                                    `;
-                                }
-
-                                return `
-                                    <div class="d-flex justify-content-end gap-1">
-                                        ${adminActions}
-                                        <button class="btn btn-sm btn-success" title="Copiar enlace limpio para WhatsApp" onclick="copyDirectLink(${row.id})"><i class="bi bi-whatsapp"></i></button>
-                                        <button class="btn btn-sm btn-primary" title="Reproducir" onclick="playVideo(${row.id}, '${safeName}')"><i class="bi bi-play-fill"></i></button>
-                                    </div>
-                                `;
-                            }
-                        }
-                    ]
-                });
-            });
-            
-            loadStats();
-            loadCategoriesDropdown();
-            $('#filterLocation, #filterCategory, #filterDateText, #filterStartDate, #filterEndDate').on('keyup change', function() { if(table) table.draw(); });
-            setInterval(checkStatus, 3000);
-            loadErrorsLogCount();
-        });
-
-        function loadCategoriesDropdown() {
-            fetch('/api/categories')
-            .then(r => r.json())
-            .then(cats => {
-                const select = $('#filterCategory');
-                const currentVal = select.val();
-                select.html('<option value="">Todas las categorías...</option>');
-                cats.forEach(c => {
-                    select.append(`<option value="${c}">${c}</option>`);
-                });
-                if(currentVal) select.val(currentVal);
-            });
-        }
-
-        function editCategory(id, currentCat) {
-            if (!isAdmin) return alert("Acción restringida al administrador.");
-            const newCat = prompt("Introduce la categoría para este vídeo (deja en blanco para quitarla):", currentCat);
-            if (newCat !== null) {
-                fetch('/api/videos/category', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id: id, category: newCat.trim() })
-                })
-                .then(r => {
-                    if (!r.ok) throw new Error("No autorizado");
-                    return r.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        table.ajax.reload(null, false);
-                        loadCategoriesDropdown();
-                    }
-                })
-                .catch(err => alert("Error: No tienes permisos para realizar esta acción."));
-            }
-        }
-
-        function loadStats() {
-            fetch('/api/dashboard_stats')
-            .then(r => {
-                if(!r.ok) throw new Error("Fallo en servidor");
-                return r.json();
-            })
-            .then(data => {
-                document.getElementById('statTotalVids').innerText = (data.total_videos || 0).toLocaleString('es-ES');
-                document.getElementById('statTotalSize').innerText = (data.total_size_gb || 0).toLocaleString('es-ES') + " GB";
-                document.getElementById('statTotalHours').innerText = (data.total_duration_hrs || 0).toLocaleString('es-ES') + " h";
-                document.getElementById('statAvgSize').innerText = (data.avg_size_mb || 0).toLocaleString('es-ES') + " MB";
-            })
-            .catch(err => {
-                console.error("Error al cargar estadísticas", err);
-            });
-        }
-
-        function triggerScan(resume, path = null) {
-            if (!isAdmin) return alert("Acción restringida al administrador.");
-            fetch('/api/scan', { 
-                method: 'POST', 
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ resume: resume, clean_first: !resume, path: path }) 
-            })
-            .then(r => {
-                if (!r.ok) throw new Error("No autorizado");
-                return r.json();
-            })
-            .then(data => { checkStatus(); })
-            .catch(err => alert("Error: No tienes permisos para iniciar escaneos."));
-        }
-
-        function stopScan() {
-            if (!isAdmin) return alert("Acción restringida al administrador.");
-            fetch('/api/scan/stop', { method: 'POST' })
-            .then(r => {
-                if (!r.ok) throw new Error("No autorizado");
-                return r.json();
-            })
-            .then(data => { checkStatus(); })
-            .catch(err => alert("Error al cancelar el escaneo."));
-        }
-
-        function scanSpecificFolder(folderPath) {
-            if (!isAdmin) return alert("Acción restringida al administrador.");
-            if (confirm(`¿Deseas escanear únicamente la ruta:\n${folderPath}?`)) {
-                triggerScan(false, folderPath);
-                alert("🚀 Escaneo específico iniciado para la carpeta seleccionada.");
-            }
-        }
-
-        function copyDirectLink(id) {
-            let hostname = window.location.hostname;
-            let protocol = window.location.protocol;
-            let port = window.location.port;
-            let baseUrl = "";
-            
-            if (hostname.startsWith("192.168.") || hostname === "localhost" || hostname === "127.0.0.1") {
-                baseUrl = protocol + "//" + hostname + (port ? ":" + port : "");
-            } else {
-                baseUrl = protocol + "//" + hostname;
-            }
-            
-            const fullUrl = baseUrl + '/share/' + id + '/video.mp4';
-            
-            if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(fullUrl).then(() => { alert("✅ ¡Enlace copiado!\n🔗 " + fullUrl); })
-                .catch(() => fallbackCopyTextToClipboard(fullUrl));
-            } else { fallbackCopyTextToClipboard(fullUrl); }
-        }
-
-        function fallbackCopyTextToClipboard(text) {
-            let textArea = document.createElement("textarea");
-            textArea.value = text;
-            textArea.style.position = "fixed";
-            document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
-            try { document.execCommand('copy') ? alert("✅ ¡Enlace copiado!\n🔗 " + text) : alert("⚠️ Cópialo manualmente:\n\n" + text); } 
-            catch (err) { alert("⚠️ Error de navegador. Cópialo manualmente:\n\n" + text); }
-            document.body.removeChild(textArea);
-        }
-
-        function resetFilters() {
-            $('#filterLocation').val(''); $('#filterCategory').val(''); $('#filterDateText').val(''); $('#filterStartDate').val(''); $('#filterEndDate').val('');
-            if(table) table.draw();
-        }
-
-        function renameVideo(id, currentName) {
-            if (!isAdmin) return alert("Acción restringida al administrador.");
-            const newName = prompt("Introduce el nuevo nombre:", currentName);
-            if (newName && newName.trim() !== "" && newName !== currentName) {
-                fetch('/api/videos/rename', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: id, new_name: newName.trim() })})
-                .then(r => {
-                    if (!r.ok) throw new Error("No autorizado");
-                    return r.json();
-                })
-                .then(data => { if (data.success && table) table.ajax.reload(null, false); })
-                .catch(err => alert("Error: No tienes permisos para renombrar vídeos."));
-            }
-        }
-
-        function deleteVideo(id, name) {
-            if (!isAdmin) return alert("Acción restringida al administrador.");
-            if (confirm(`¿Eliminar "${name}" de la web?`)) {
-                fetch('/api/videos/delete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: id }) })
-                .then(r => {
-                    if (!r.ok) throw new Error("No autorizado");
-                    return r.json();
-                })
-                .then(data => { if (data.success && table) table.ajax.reload(null, false); })
-                .catch(err => alert("Error: No tienes permisos para eliminar vídeos."));
-            }
-        }
-
-        function playVideo(id, safeName) {
-            document.getElementById('videoModalTitle').innerText = safeName;
-            const player = document.getElementById('webVideoPlayer');
-            const alertBox = document.getElementById('videoErrorAlert');
-            if (alertBox) alertBox.classList.add('d-none');
-            player.style.display = 'block';
-            player.onerror = function() {
-                if (alertBox) { alertBox.classList.remove('d-none'); player.style.display = 'none'; }
-            };
-            player.src = `/api/stream?video_id=${id}`;
-            const modal = new bootstrap.Modal(document.getElementById('videoModal'));
-            modal.show();
-        }
-
-        function stopVideo() {
-            const player = document.getElementById('webVideoPlayer');
-            player.pause(); player.src = "";
-            if (document.getElementById('videoErrorAlert')) document.getElementById('videoErrorAlert').classList.add('d-none');
-            player.style.display = 'block';
-        }
-
-        function checkStatus() {
-            fetch('/api/status').then(r => r.json()).then(data => {
-                const count = data.total_count || 0;
-                const statusEl = document.getElementById('statusText');
-                const cancelBtn = document.getElementById('btnCancelScan');
-
-                if (cancelBtn && isAdmin) {
-                    if (data.is_completed === false) {
-                        cancelBtn.style.display = 'inline-block';
-                    } else {
-                        cancelBtn.style.display = 'none';
-                    }
-                }
-
-                if (statusEl) {
-                    if (data.is_completed === "ZOMBIE") {
-                        statusEl.innerHTML = `<span class="badge bg-danger"><i class="bi bi-x-circle-fill"></i> Escáner detenido inesperadamente | Pulsa "Retomar" o revisa Errores</span>`;
-                    } else if (data.is_completed === false) {
-                        const filesScanned = data.files_scanned || 0;
-                        const startTime = data.start_timestamp || 0;
-                        let speedText = "", elapsedText = "";
-                        if (startTime > 0) {
-                            const elapsedSeconds = Math.floor(Date.now() / 1000 - startTime);
-                            if (elapsedSeconds > 0) {
-                                elapsedText = ` | ⏱️ ${Math.floor(elapsedSeconds / 60)}m ${elapsedSeconds % 60}s`;
-                                // Solo calcula y muestra velocidad si ya ha encontrado ficheros/vídeos
-                                if (filesScanned > 0) {
-                                    speedText = ` (${(filesScanned / elapsedSeconds).toFixed(1)} arch/s)`;
-                                }
-                            }
-                        }
-                        statusEl.innerHTML = `<span class="badge bg-warning text-dark"><span class="spinner-border spinner-border-sm me-1"></span> Escaneando... | 📁 Ficheros: <strong>${filesScanned}</strong>${speedText}${elapsedText} | 📍 ${data.last_folder || 'Iniciando...'}</span>`;
-                        if(table) table.ajax.reload(null, false);
-                    } else {
-                        statusEl.innerHTML = `<span class="badge bg-success">Completado | Último escaneo: ${data.last_run || 'N/A'}</span>`;
-                    }
-                }
-            });
-            loadErrorsLogCount();
-        }
-
-        function loadErrorsLogCount() {
-            fetch('/api/errors').then(r => r.json()).then(data => { document.getElementById('errorBadgeCount').innerText = data.length || 0; });
-        }
-
-        function loadErrorsLog() {
-            fetch('/api/errors').then(r => r.json()).then(data => {
-                const container = document.getElementById('errorsListContainer');
-                document.getElementById('errorBadgeCount').innerText = data.length || 0;
-                if (!data || data.length === 0) {
-                    container.innerHTML = '<div class="p-4 text-center text-muted">No hay errores registrados.</div>'; return;
-                }
-                let html = '';
-                data.forEach(err => { html += `<div class="p-2 border-bottom text-danger font-monospace small"><strong>[${err.context}]</strong> ${err.timestamp}: ${err.message}</div>`; });
-                container.innerHTML = html;
-            });
-        }
-
-        function clearErrorsLog() { 
-            if (!isAdmin) return alert("Acción restringida al administrador.");
-            fetch('/api/errors/clear', { method: 'POST' })
-            .then(r => {
-                if(!r.ok) throw new Error("No autorizado");
-                loadErrorsLog();
-            })
-            .catch(err => alert("Error: No tienes permisos para limpiar los errores."));
-        }
-        
-        function initFolderExplorer() { 
-            fetch('/api/folders').then(r => r.json()).then(data => { 
-                rawFoldersData = data.filter(f => {
-                    for(let i=0; i<EXCLUDED_FOLDERS.length; i++) {
-                        if (f.path.startsWith(EXCLUDED_FOLDERS[i])) return false;
-                    }
-                    return true;
-                });
-                currentPath = ""; 
-                renderFolderView(""); 
-            }); 
-        }
-        
-        function renderFolderView(targetPath) {
-            currentPath = targetPath;
-            const container = document.getElementById('foldersListContainer');
-            let breadcrumbHtml = `<li class="breadcrumb-item"><a onclick="renderFolderView('')">Raíz</a></li>`;
-            if (targetPath) {
-                let parts = targetPath.split('/').filter(p => p), accumulated = "";
-                parts.forEach((part, index) => {
-                    accumulated += "/" + part;
-                    breadcrumbHtml += index === parts.length - 1 ? `<li class="breadcrumb-item active">${part}</li>` : `<li class="breadcrumb-item"><a onclick="renderFolderView('${accumulated}')">${part}</a></li>`;
-                });
-            }
-            document.getElementById('folderBreadcrumbs').innerHTML = breadcrumbHtml;
-
-            let children = [];
-            if (targetPath === "") {
-                let rootsMap = {};
-                rawFoldersData.forEach(f => {
-                    let parts = f.path.split('/').filter(p => p);
-                    if (parts.length >= 2) {
-                        let rootPath = "/" + parts[0] + "/" + parts[1];
-                        if (!rootsMap[rootPath]) rootsMap[rootPath] = { path: rootPath, total_files: 0, videos_found: 0, scanned_at: f.scanned_at };
-                        rootsMap[rootPath].total_files += f.total_files; rootsMap[rootPath].videos_found += f.videos_found;
-                    }
-                });
-                children = Object.values(rootsMap);
-            } else {
-                let targetSlashCount = targetPath.split('/').filter(p => p).length;
-                rawFoldersData.forEach(f => {
-                    if (f.path.startsWith(targetPath + "/") && f.path !== targetPath && f.path.split('/').filter(p => p).length === targetSlashCount + 1) children.push(f);
-                });
-            }
-
-            if (children.length === 0) { container.innerHTML = '<div class="p-4 text-center text-muted">No hay subcarpetas registradas.</div>'; return; }
-
-            let html = '';
-            children.sort((a, b) => a.path.localeCompare(b.path)).forEach(folder => {
-                let folderName = folder.path.split('/').pop();
-                
-                let scanBtnHtml = '';
-                if (isAdmin) {
-                    scanBtnHtml = `
-                        <button class="btn btn-sm btn-outline-primary" title="Escanear solo esta carpeta" onclick="scanSpecificFolder('${folder.path}')">
-                            <i class="bi bi-arrow-clockwise"></i> Escanear
-                        </button>
-                    `;
-                }
-
-                html += `<div class="folder-item">
-                            <div style="cursor: pointer; flex-grow: 1;" onclick="renderFolderView('${folder.path}')">
-                                <i class="bi bi-folder-fill text-warning me-2 fs-5"></i><strong>${folderName}</strong><br>
-                                <small class="text-muted ms-4" style="font-size:0.75rem;">${folder.path}</small>
-                            </div>
-                            <div class="d-flex align-items-center gap-2">
-                                <span class="badge bg-secondary">Ficheros: ${folder.total_files}</span>
-                                <span class="badge bg-success">Vídeos: ${folder.videos_found}</span>
-                                ${scanBtnHtml}
-                            </div>
-                        </div>`;
-            });
-            container.innerHTML = html;
-        }
-    </script>
+    <!-- Lógica de la aplicación -->
+    <script src="/static/app.js"></script>
 </body>
 </html>
